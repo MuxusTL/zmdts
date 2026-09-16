@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0A0A0B</color>
+    <color name="surface">#141416</color>
+    <color name="surface2">#1C1C1F</color>
+    <color name="border">#27272A</color>
+    <color name="text">#FAFAFA</color>
+    <color name="text_muted">#A1A1AA</color>
+
+    <color name="primary">#EF4444</color>
+    <color name="primary_dim">#B91C1C</color>
+    <color name="accent">#EC4899</color>
+    <color name="gold">#F59E0B</color>
+    <color name="green">#34D399</color>
+
+    <color name="notification">#EF4444</color>
+</resources>
