@@ -1,6 +1,6 @@
 package dev.zmdtsdev.netvpn.vpn;
 
-import static ermission.POST_NOTIFICATIONS;
+import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static android.app.NotificationManager.IMPORTANCE_LOW;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
