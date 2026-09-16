@@ -1,6 +1,6 @@
-package dev.nearldev.adaway.vpn;
+package dev.zmdtsdev.netvpn.vpn;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
+import static ermission.POST_NOTIFICATIONS;
 import static android.app.NotificationManager.IMPORTANCE_LOW;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
@@ -8,13 +8,13 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-import static dev.nearldev.adaway.vpn.VpnService.NetworkType.CELLULAR;
-import static dev.nearldev.adaway.vpn.VpnService.NetworkType.WIFI;
-import static dev.nearldev.adaway.vpn.VpnStatus.RECONNECTING;
-import static dev.nearldev.adaway.vpn.VpnStatus.RUNNING;
-import static dev.nearldev.adaway.vpn.VpnStatus.STARTING;
-import static dev.nearldev.adaway.vpn.VpnStatus.STOPPED;
-import static dev.nearldev.adaway.vpn.VpnStatus.WAITING_FOR_NETWORK;
+import static dev.zmdtsdev.netvpn.vpn.VpnService.NetworkType.CELLULAR;
+import static dev.zmdtsdev.netvpn.vpn.VpnService.NetworkType.WIFI;
+import static dev.zmdtsdev.netvpn.vpn.VpnStatus.RECONNECTING;
+import static dev.zmdtsdev.netvpn.vpn.VpnStatus.RUNNING;
+import static dev.zmdtsdev.netvpn.vpn.VpnStatus.STARTING;
+import static dev.zmdtsdev.netvpn.vpn.VpnStatus.STOPPED;
+import static dev.zmdtsdev.netvpn.vpn.VpnStatus.WAITING_FOR_NETWORK;
 import static java.util.Objects.requireNonNull;
 
 import android.app.Notification;
@@ -38,9 +38,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import dev.nearldev.adaway.R;
-import dev.nearldev.adaway.ui.MainActivity;
-import dev.nearldev.adaway.vpn.worker.VpnWorker;
+import dev.zmdtsdev.netvpn.R;
+import dev.zmdtsdev.netvpn.ui.MainActivity;
+import dev.zmdtsdev.netvpn.vpn.worker.VpnWorker;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
@@ -49,10 +49,10 @@ import java.util.Set;
 import timber.log.Timber;
 
 public class VpnService extends android.net.VpnService implements Handler.Callback {
-    public static final String ACTION_START = "dev.nearldev.adaway.vpn.START";
-    public static final String ACTION_STOP = "dev.nearldev.adaway.vpn.STOP";
-    public static final String VPN_UPDATE_STATUS_INTENT = "dev.nearldev.adaway.VPN_UPDATE_STATUS";
-    public static final String VPN_UPDATE_STATUS_EXTRA = "VPN_STATUS";
+    public static final String ACTION_START = "dev.zmdtsdev.netvpn.vpn.START";
+    public static final String ACTION_STOP = "dev.zmdtsdev.netvpn.vpn.STOP";
+    public static final String VPN_UPDATE_STATUS_INTENT = "dev.zmdtsdev.netvpn.VPN_UPDATE_STATUS";
+    public static final String VPN_UPDATE_STATUS_EXTRA = "dev.zmdtsdev.netvpn.VPN_STATUS";
 
     private static final String NOTIFICATION_CHANNEL_ID = "vpn_service";
     private static final int NOTIFICATION_ID_RUNNING = 1001;

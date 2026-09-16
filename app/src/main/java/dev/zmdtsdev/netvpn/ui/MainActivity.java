@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.ui;
+package dev.zmdtsdev.netvpn.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,8 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import dev.nearldev.adaway.R;
-import dev.nearldev.adaway.data.DomainStore;
+import dev.zmdtsdev.netvpn.R;
+import dev.zmdtsdev.netvpn.data.DomainStore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver vpnStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Object status = intent.getSerializableExtra(dev.nearldev.adaway.vpn.VpnService.VPN_UPDATE_STATUS_EXTRA);
-            if (status instanceof dev.nearldev.adaway.vpn.VpnStatus) {
-                onVpnStatusChanged((dev.nearldev.adaway.vpn.VpnStatus) status);
+            Object status = intent.getSerializableExtra(dev.zmdtsdev.netvpn.vpn.VpnService.VPN_UPDATE_STATUS_EXTRA);
+            if (status instanceof dev.zmdtsdev.netvpn.vpn.VpnStatus) {
+                onVpnStatusChanged((dev.zmdtsdev.netvpn.vpn.VpnStatus) status);
             }
         }
     };
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         this.webView.getSettings().setJavaScriptEnabled(true);
         this.webView.setWebViewClient(new WebViewClient());
         this.webView.addJavascriptInterface(new AndroidBridge(this, this.domainStore), "Android");
-        this.webView.loadUrl("file:///android_asset/adaway.html");
+        this.webView.loadUrl("file:///android_asset/netvpn.html");
 
         this.vpnConsentLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 this.vpnStatusReceiver,
-                new IntentFilter(dev.nearldev.adaway.vpn.VpnService.VPN_UPDATE_STATUS_INTENT)
+                new IntentFilter(dev.zmdtsdev.netvpn.vpn.VpnService.VPN_UPDATE_STATUS_INTENT)
         );
     }
 
@@ -124,23 +124,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startVpn() {
-        Intent intent = new Intent(this, dev.nearldev.adaway.vpn.VpnService.class)
-                .setAction(dev.nearldev.adaway.vpn.VpnService.ACTION_START);
+        Intent intent = new Intent(this, dev.zmdtsdev.netvpn.vpn.VpnService.class)
+                .setAction(dev.zmdtsdev.netvpn.vpn.VpnService.ACTION_START);
         ContextCompat.startForegroundService(this, intent);
     }
 
     private void stopVpn() {
-        Intent intent = new Intent(this, dev.nearldev.adaway.vpn.VpnService.class)
-                .setAction(dev.nearldev.adaway.vpn.VpnService.ACTION_STOP);
+        Intent intent = new Intent(this, dev.zmdtsdev.netvpn.vpn.VpnService.class)
+                .setAction(dev.zmdtsdev.netvpn.vpn.VpnService.ACTION_STOP);
         startService(intent);
     }
 
-    private void onVpnStatusChanged(dev.nearldev.adaway.vpn.VpnStatus status) {
-        this.vpnRunning = status == dev.nearldev.adaway.vpn.VpnStatus.RUNNING;
-        if (status == dev.nearldev.adaway.vpn.VpnStatus.RUNNING) {
+    private void onVpnStatusChanged(dev.zmdtsdev.netvpn.vpn.VpnStatus status) {
+        this.vpnRunning = status == dev.zmdtsdev.netvpn.vpn.VpnStatus.RUNNING;
+        if (status == dev.zmdtsdev.netvpn.vpn.VpnStatus.RUNNING) {
             this.handler.removeCallbacks(this.statsTicker);
             this.handler.post(this.statsTicker);
-        } else if (status == dev.nearldev.adaway.vpn.VpnStatus.STOPPED) {
+        } else if (status == dev.zmdtsdev.netvpn.vpn.VpnStatus.STOPPED) {
             this.handler.removeCallbacks(this.statsTicker);
             this.domainStore.resetBlockedCount();
         }

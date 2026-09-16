@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.vpn.dns;
+package dev.zmdtsdev.netvpn.vpn.dns;
 
 import static android.system.OsConstants.POLLIN;
 

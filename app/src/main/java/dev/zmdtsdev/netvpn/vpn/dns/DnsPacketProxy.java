@@ -12,11 +12,11 @@
  * Contributions shall also be provided under any later versions of the
  * GPL.
  */
-package dev.nearldev.adaway.vpn.dns;
+package dev.zmdtsdev.netvpn.vpn.dns;
 
 import android.content.Context;
 
-import dev.nearldev.adaway.data.DomainStore;
+import dev.zmdtsdev.netvpn.data.DomainStore;
 import org.pcap4j.packet.IpPacket;
 import org.pcap4j.packet.IpSelector;
 import org.pcap4j.packet.IpV4Packet;

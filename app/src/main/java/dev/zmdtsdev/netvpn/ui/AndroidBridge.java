@@ -1,8 +1,7 @@
-package dev.nearldev.adaway.ui;
+package dev.zmdtsdev.netvpn.ui;
 
 import android.webkit.JavascriptInterface;
-
-import dev.nearldev.adaway.data.DomainStore;
+import dev.zmdtsdev.netvpn.data.DomainStore;
 
 public class AndroidBridge {
 

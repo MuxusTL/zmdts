@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.data;
+package dev.zmdtsdev.netvpn.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

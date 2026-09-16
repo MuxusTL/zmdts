@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.vpn.worker;
+package dev.zmdtsdev.netvpn.vpn.worker;
 
 public class VpnNetworkException extends Exception {
     public VpnNetworkException(String s) {

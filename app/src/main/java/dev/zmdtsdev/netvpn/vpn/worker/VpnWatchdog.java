@@ -12,7 +12,7 @@
  * Contributions shall also be provided under any later versions of the
  * GPL.
  */
-package dev.nearldev.adaway.vpn.worker;
+package dev.zmdtsdev.netvpn.vpn.worker;
 
 import androidx.annotation.NonNull;
 
