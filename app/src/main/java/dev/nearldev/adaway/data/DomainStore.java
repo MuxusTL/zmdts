@@ -99,6 +99,28 @@ public class DomainStore {
         }
     }
 
+    public synchronized void toggleEnabled(String name) {
+        Domain domain = this.domains.get(normalize(name));
+        if (domain != null) {
+            domain.enabled = !domain.enabled;
+            persist();
+        }
+    }
+
+    public synchronized String toJson() {
+        JSONArray array = new JSONArray();
+        try {
+            for (Domain domain : this.domains.values()) {
+                JSONObject item = new JSONObject();
+                item.put("name", domain.name);
+                item.put("enabled", domain.enabled);
+                array.put(item);
+            }
+        } catch (JSONException ignored) {
+        }
+        return array.toString();
+    }
+
     public boolean isBlocked(String host) {
         Domain domain;
         synchronized (this) {

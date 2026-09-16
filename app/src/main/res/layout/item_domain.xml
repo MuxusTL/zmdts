@@ -25,30 +25,33 @@
         android:ellipsize="end"
         tools:text="ads.doubleclick.net" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <CheckBox
         android:id="@+id/domainSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="4dp"
-        app:thumbTint="@color/text"
-        app:trackTint="@color/primary" />
+        android:button="@drawable/toggle_selector"
+        android:background="@null"
+        android:text=""
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp" />
 
     <ImageButton
         android:id="@+id/editBtn"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:padding="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_edit"
-        app:tint="@color/text_muted"
+        android:src="@drawable/ic_edit_thin"
         android:contentDescription="@null" />
 
     <ImageButton
         android:id="@+id/deleteBtn"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:padding="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_delete"
-        app:tint="@color/text_muted"
+        android:src="@drawable/ic_close_thin"
         android:contentDescription="@null" />
 
 </LinearLayout>
