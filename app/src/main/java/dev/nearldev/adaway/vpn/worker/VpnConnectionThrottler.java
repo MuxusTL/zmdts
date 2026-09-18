@@ -1,4 +1,4 @@
-package dev.zmdtsdev.netvpn.vpn.worker;
+package dev.nearldev.adaway.vpn.worker;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

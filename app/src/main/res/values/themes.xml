@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.NetVPN" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.NearlBlock" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dim</item>
         <item name="colorOnPrimary">@color/text</item>

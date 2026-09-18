@@ -1,2 +1,2 @@
-rootProject.name = "NetVPN"
+rootProject.name = "NearlBlock"
 include ':app'

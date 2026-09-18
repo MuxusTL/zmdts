@@ -12,11 +12,13 @@
  * Contributions shall also be provided under any later versions of the
  * GPL.
  */
-package dev.zmdtsdev.netvpn.vpn.dns;
+package dev.nearldev.adaway.vpn.dns;
 
 import android.content.Context;
 
-import dev.zmdtsdev.netvpn.data.DomainStore;
+import dev.nearldev.adaway.data.DomainStore;
+import dev.nearldev.adaway.data.DnsLogStore;
+import dev.nearldev.adaway.data.AppAttribution;
 import org.pcap4j.packet.IpPacket;
 import org.pcap4j.packet.IpSelector;
 import org.pcap4j.packet.IpV4Packet;
@@ -68,6 +70,8 @@ public class DnsPacketProxy {
     private final EventLoop eventLoop;
     private final DnsServerMapper dnsServerMapper;
     private DomainStore domainStore;
+    private DnsLogStore logStore;
+    private Context context;
 
     public DnsPacketProxy(EventLoop eventLoop, DnsServerMapper dnsServerMapper) {
         this.eventLoop = eventLoop;
@@ -80,7 +84,9 @@ public class DnsPacketProxy {
      * @param context The context we are operating in (for the database).
      */
     public void initialize(Context context) {
+        this.context = context.getApplicationContext();
         this.domainStore = DomainStore.getInstance(context);
+        this.logStore = DnsLogStore.getInstance(context);
     }
 
     /**
@@ -190,6 +196,11 @@ public class DnsPacketProxy {
         Name name = dnsMsg.getQuestion().getName();
         String dnsQueryName = name.toString(true);
         boolean blocked = isBlocked(dnsQueryName);
+
+        if (this.logStore != null && this.logStore.isEnabled()) {
+            logQuery(dnsQueryName, blocked, ipPacket.getHeader().getSrcAddr(), updPacket.getHeader().getSrcPort().valueAsInt(), packetAddress, packetPort);
+        }
+
         if (blocked) {
             Timber.i("handleDnsRequest: DNS Name %s blocked!", dnsQueryName);
             dnsMsg.getHeader().setFlag(Flags.QR);
@@ -206,6 +217,16 @@ public class DnsPacketProxy {
     private boolean isBlocked(String dnsQueryName) {
         String hostname = dnsQueryName.toLowerCase(Locale.ENGLISH);
         return this.domainStore != null && this.domainStore.isBlocked(hostname);
+    }
+
+    private void logQuery(String domain, boolean blocked, InetAddress localAddr, int localPort, InetAddress remoteAddr, int remotePort) {
+        if (this.context == null) {
+            return;
+        }
+        new Thread(() -> {
+            AppAttribution.Result attribution = AppAttribution.resolve(this.context, localAddr, localPort, remoteAddr, remotePort);
+            this.logStore.add(domain, blocked, attribution.label, attribution.packageName);
+        }).start();
     }
 
     /**

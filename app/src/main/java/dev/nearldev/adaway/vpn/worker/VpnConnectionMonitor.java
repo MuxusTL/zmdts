@@ -1,4 +1,4 @@
-package dev.zmdtsdev.netvpn.vpn.worker;
+package dev.nearldev.adaway.vpn.worker;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Objects.requireNonNull;
@@ -6,7 +6,7 @@ import static java.util.Objects.requireNonNull;
 import android.content.Context;
 import android.content.Intent;
 
-import dev.zmdtsdev.netvpn.vpn.VpnService;
+import dev.nearldev.adaway.vpn.VpnService;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;

@@ -228,6 +228,111 @@ body {
   transition: transform .2s;
 }
 .mini-switch.active .mini-switch-knob { transform: translateX(14px); }
+
+.log-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.log-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+.log-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.log-count { font-size: 12px; color: var(--text-muted); }
+.log-list { display: flex; flex-direction: column; gap: 6px; max-height: 340px; overflow-y: auto; }
+.log-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.log-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.log-dot.blocked { background: var(--red); }
+.log-dot.allowed { background: var(--green); }
+.log-info { flex: 1; min-width: 0; }
+.log-domain {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.log-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.log-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 50;
+}
+.modal-overlay.open { display: flex; }
+.modal-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px;
+}
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.modal-row:last-of-type { border-bottom: none; }
+.modal-label { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+.modal-value { font-size: 13px; color: var(--text); text-align: right; overflow-wrap: anywhere; }
+.modal-value.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.secondary-close-btn {
+  width: 100%;
+  margin-top: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.source-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.source-row {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.source-top { display: flex; align-items: center; gap: 10px; }
+.source-url {
+  flex: 1;
+  min-width: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.source-meta { font-size: 11px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; justify-content: space-between; }
+.source-count { font-family: 'JetBrains Mono', monospace; }
+.source-actions { display: flex; gap: 4px; }
+.source-update-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 11px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.source-update-btn:disabled { opacity: .5; }
+.source-error { color: var(--red); font-size: 11px; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -274,6 +379,47 @@ body {
       <button class="filter-btn" data-filter="off" onclick="setFilter('off')">Đang tắt</button>
     </div>
     <div class="domain-list" id="domainList"></div>
+  </div>
+
+  <div class="card">
+    <div class="log-top">
+      <div class="section-title" style="margin-bottom:0">Nhật ký yêu cầu DNS</div>
+      <div class="switch" id="logSwitch" onclick="toggleLog()">
+        <div class="switch-knob"></div>
+      </div>
+    </div>
+    <div class="log-desc">Ghi lại domain mà các app/web trên máy đang truy vấn. Log vẫn giữ nguyên kể cả khi tắt VPN.</div>
+
+    <div id="logDisabledState" class="empty-state">Bật nhật ký để bắt đầu ghi lại yêu cầu DNS</div>
+
+    <div id="logEnabledBlock" style="display:none">
+      <div class="log-toolbar">
+        <span id="logCount" class="log-count">0 mục</span>
+        <button class="icon-btn" onclick="clearLogs()">Xoá log</button>
+      </div>
+      <div class="log-list" id="logList"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Nguồn chặn</div>
+    <div class="log-desc">Thêm URL danh sách hosts (vd: adaway.org/hosts.txt) để tự động import hàng loạt domain quảng cáo vào danh sách chặn.</div>
+    <div class="add-row">
+      <input class="add-input" id="sourceInput" placeholder="https://adaway.org/hosts.txt" onkeydown="if(event.key==='Enter')addSource()">
+      <button class="add-btn" onclick="addSource()">Thêm</button>
+    </div>
+    <div id="sourceList" class="source-list"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="logModal" onclick="closeLogDetail(event)">
+  <div class="modal-card">
+    <div class="modal-row"><span class="modal-label">Domain</span><span class="modal-value mono" id="mDomain"></span></div>
+    <div class="modal-row"><span class="modal-label">Thời gian</span><span class="modal-value" id="mTime"></span></div>
+    <div class="modal-row"><span class="modal-label">Trạng thái</span><span class="modal-value" id="mStatus"></span></div>
+    <div class="modal-row"><span class="modal-label">Ứng dụng</span><span class="modal-value" id="mApp"></span></div>
+    <div class="modal-row"><span class="modal-label">Gói</span><span class="modal-value mono" id="mPkg"></span></div>
+    <button class="secondary-close-btn" onclick="closeLogDetail()">Đóng</button>
   </div>
 </div>
 
@@ -411,6 +557,163 @@ refreshDomains();
 if (Android.isVpnRunning()) {
   onVpnStatus('RUNNING', 'Đã bật');
 }
+
+let logTimer = null;
+let currentLogs = [];
+
+function initLog() {
+  const enabled = Android.isLogEnabled();
+  document.getElementById('logSwitch').classList.toggle('active', enabled);
+  document.getElementById('logDisabledState').style.display = enabled ? 'none' : 'block';
+  document.getElementById('logEnabledBlock').style.display = enabled ? 'block' : 'none';
+  if (enabled) startLogPolling();
+}
+
+function toggleLog() {
+  const sw = document.getElementById('logSwitch');
+  const enabled = !sw.classList.contains('active');
+  Android.setLogEnabled(enabled);
+  sw.classList.toggle('active', enabled);
+  document.getElementById('logDisabledState').style.display = enabled ? 'none' : 'block';
+  document.getElementById('logEnabledBlock').style.display = enabled ? 'block' : 'none';
+  if (enabled) {
+    startLogPolling();
+  } else {
+    stopLogPolling();
+  }
+}
+
+function startLogPolling() {
+  refreshLogs();
+  logTimer = setInterval(refreshLogs, 1500);
+}
+function stopLogPolling() {
+  clearInterval(logTimer);
+}
+
+function refreshLogs() {
+  currentLogs = JSON.parse(Android.getLogs());
+  renderLogs();
+}
+
+function clearLogs() {
+  Android.clearLogs();
+  refreshLogs();
+}
+
+function renderLogs() {
+  document.getElementById('logCount').textContent = currentLogs.length + ' mục';
+  const list = document.getElementById('logList');
+  if (currentLogs.length === 0) {
+    list.innerHTML = '<div class="empty-state">Chưa có yêu cầu DNS nào được ghi</div>';
+    return;
+  }
+  list.innerHTML = currentLogs.map((l, i) => `
+    <div class="log-row" onclick="openLogDetail(${i})">
+      <div class="log-dot ${l.blocked ? 'blocked' : 'allowed'}"></div>
+      <div class="log-info">
+        <div class="log-domain">${l.domain}</div>
+        <div class="log-meta">${l.appLabel}${l.blocked ? ' · đã chặn' : ''}</div>
+      </div>
+      <div class="log-time">${l.time}</div>
+    </div>
+  `).join('');
+}
+
+function openLogDetail(index) {
+  const l = currentLogs[index];
+  if (!l) return;
+  document.getElementById('mDomain').textContent = l.domain;
+  document.getElementById('mTime').textContent = l.time;
+  document.getElementById('mStatus').textContent = l.blocked ? 'Đã chặn' : 'Cho phép';
+  document.getElementById('mApp').textContent = l.appLabel;
+  document.getElementById('mPkg').textContent = l.packageName || '—';
+  document.getElementById('logModal').classList.add('open');
+}
+
+function closeLogDetail(event) {
+  if (event && event.target.id !== 'logModal') return;
+  document.getElementById('logModal').classList.remove('open');
+}
+
+let updatingSources = {};
+let sourceErrors = {};
+
+function initSources() {
+  refreshSources();
+}
+
+function refreshSources() {
+  const sources = JSON.parse(Android.getSources());
+  renderSources(sources);
+}
+
+function addSource() {
+  const input = document.getElementById('sourceInput');
+  const val = input.value.trim();
+  if (!val) return;
+  const sources = JSON.parse(Android.addSource(val));
+  input.value = '';
+  renderSources(sources);
+}
+
+function removeSource(url) {
+  const sources = JSON.parse(Android.removeSource(url));
+  renderSources(sources);
+}
+
+function toggleSource(url) {
+  const sources = JSON.parse(Android.toggleSource(url));
+  renderSources(sources);
+}
+
+function updateSource(url) {
+  updatingSources[url] = true;
+  delete sourceErrors[url];
+  refreshSources();
+  Android.updateSource(url);
+}
+
+function onSourceUpdated(url, count, error) {
+  delete updatingSources[url];
+  if (error) {
+    sourceErrors[url] = error;
+  } else {
+    delete sourceErrors[url];
+  }
+  refreshSources();
+  refreshDomains();
+}
+
+function renderSources(sources) {
+  const list = document.getElementById('sourceList');
+  if (sources.length === 0) {
+    list.innerHTML = '<div class="empty-state">Chưa có nguồn nào</div>';
+    return;
+  }
+  const esc2 = (s) => s.replace(/'/g, "\\'");
+  list.innerHTML = sources.map(s => {
+    const updating = !!updatingSources[s.url];
+    const err = sourceErrors[s.url];
+    return `<div class="source-row">
+      <div class="source-top">
+        <div class="source-url">${s.url}</div>
+        <div class="mini-switch ${s.enabled ? 'active' : ''}" onclick="toggleSource('${esc2(s.url)}')">
+          <div class="mini-switch-knob"></div>
+        </div>
+        <button class="icon-btn danger" onclick="removeSource('${esc2(s.url)}')">✕</button>
+      </div>
+      <div class="source-meta">
+        <span class="source-count">${s.domainCount} domain</span>
+        <button class="source-update-btn" ${updating ? 'disabled' : ''} onclick="updateSource('${esc2(s.url)}')">${updating ? 'Đang tải…' : 'Cập nhật'}</button>
+      </div>
+      ${err ? `<div class="source-error">${err}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+initLog();
+initSources();
 </script>
 </body>
 </html>

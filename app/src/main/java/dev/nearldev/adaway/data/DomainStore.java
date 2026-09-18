@@ -1,4 +1,4 @@
-package dev.zmdtsdev.netvpn.data;
+package dev.nearldev.adaway.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,10 +23,12 @@ public class DomainStore {
     public static class Domain {
         public final String name;
         public boolean enabled;
+        public final String source;
 
-        public Domain(String name, boolean enabled) {
+        public Domain(String name, boolean enabled, String source) {
             this.name = name;
             this.enabled = enabled;
+            this.source = source;
         }
     }
 
@@ -51,9 +53,9 @@ public class DomainStore {
     }
 
     private void seedDefaults() {
-        this.domains.put("ads.doubleclick.net", new Domain("ads.doubleclick.net", true));
-        this.domains.put("graph.facebook.com", new Domain("graph.facebook.com", true));
-        this.domains.put("track.adjust.com", new Domain("track.adjust.com", true));
+        this.domains.put("ads.doubleclick.net", new Domain("ads.doubleclick.net", true, null));
+        this.domains.put("graph.facebook.com", new Domain("graph.facebook.com", true, null));
+        this.domains.put("track.adjust.com", new Domain("track.adjust.com", true, null));
     }
 
     public synchronized List<Domain> getAll() {
@@ -65,7 +67,7 @@ public class DomainStore {
         if (key.isEmpty() || this.domains.containsKey(key)) {
             return false;
         }
-        this.domains.put(key, new Domain(key, true));
+        this.domains.put(key, new Domain(key, true, null));
         persist();
         return true;
     }
@@ -86,7 +88,7 @@ public class DomainStore {
         if (domain == null) {
             return false;
         }
-        this.domains.put(newKey, new Domain(newKey, domain.enabled));
+        this.domains.put(newKey, new Domain(newKey, domain.enabled, domain.source));
         persist();
         return true;
     }
@@ -107,6 +109,33 @@ public class DomainStore {
         }
     }
 
+    public synchronized boolean addFromSource(String name, String sourceUrl) {
+        String key = normalize(name);
+        if (key.isEmpty() || this.domains.containsKey(key)) {
+            return false;
+        }
+        this.domains.put(key, new Domain(key, true, sourceUrl));
+        return true;
+    }
+
+    public synchronized void persistNow() {
+        persist();
+    }
+
+    public synchronized void removeAllFromSource(String sourceUrl) {
+        this.domains.values().removeIf(d -> sourceUrl.equals(d.source));
+        persist();
+    }
+
+    public synchronized void setSourceEnabled(String sourceUrl, boolean enabled) {
+        for (Domain domain : this.domains.values()) {
+            if (sourceUrl.equals(domain.source)) {
+                domain.enabled = enabled;
+            }
+        }
+        persist();
+    }
+
     public synchronized String toJson() {
         JSONArray array = new JSONArray();
         try {
@@ -114,6 +143,7 @@ public class DomainStore {
                 JSONObject item = new JSONObject();
                 item.put("name", domain.name);
                 item.put("enabled", domain.enabled);
+                item.put("source", domain.source == null ? JSONObject.NULL : domain.source);
                 array.put(item);
             }
         } catch (JSONException ignored) {
@@ -166,7 +196,8 @@ public class DomainStore {
                 JSONObject item = array.getJSONObject(i);
                 String name = item.getString("name");
                 boolean enabled = item.optBoolean("enabled", true);
-                this.domains.put(name, new Domain(name, enabled));
+                String source = item.isNull("source") ? null : item.optString("source", null);
+                this.domains.put(name, new Domain(name, enabled, source));
             }
         } catch (JSONException e) {
             this.domains.clear();
@@ -180,6 +211,7 @@ public class DomainStore {
                 JSONObject item = new JSONObject();
                 item.put("name", domain.name);
                 item.put("enabled", domain.enabled);
+                item.put("source", domain.source == null ? JSONObject.NULL : domain.source);
                 array.put(item);
             }
         } catch (JSONException e) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NetVPN</string>
+    <string name="app_name">AdAway</string>
 
     <string name="vpn_notification_channel">Trạng thái VPN</string>
-    <string name="vpn_notification_title">NetVPN: %s</string>
+    <string name="vpn_notification_title">AdAway: %s</string>
     <string name="vpn_notification_action_pause">Tắt</string>
     <string name="vpn_notification_action_resume">Bật lại</string>
 
@@ -15,7 +15,7 @@
     <string name="vpn_notification_reconnecting_error">Lỗi mạng, đang thử lại…</string>
     <string name="vpn_notification_stopped">Đang tắt</string>
 
-    <string name="brand_name">NetVPN</string>
+    <string name="brand_name">AdAway</string>
     <string name="brand_sub">Chặn quảng cáo qua DNS</string>
     <string name="vpn_status_label">Trạng thái VPN</string>
     <string name="stat_blocked">đã chặn</string>

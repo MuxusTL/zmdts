@@ -1,8 +1,8 @@
-package dev.zmdtsdev.netvpn.vpn;
+package dev.nearldev.adaway.vpn;
 
 import androidx.annotation.StringRes;
 
-import dev.zmdtsdev.netvpn.R;
+import dev.nearldev.adaway.R;
 
 import java.util.Arrays;
 
