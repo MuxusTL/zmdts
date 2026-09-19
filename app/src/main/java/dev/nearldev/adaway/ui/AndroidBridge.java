@@ -2,10 +2,10 @@ package dev.nearldev.adaway.ui;
 
 import android.webkit.JavascriptInterface;
 
-import dev.nearldev.adaway.data.DomainStore;
 import dev.nearldev.adaway.data.DnsLogStore;
-import dev.nearldev.adaway.data.HostsSourceStore;
+import dev.nearldev.adaway.data.DomainStore;
 import dev.nearldev.adaway.data.HostsFetcher;
+import dev.nearldev.adaway.data.HostsSourceStore;
 
 public class AndroidBridge {
 
@@ -91,37 +91,87 @@ public class AndroidBridge {
     }
 
     @JavascriptInterface
-    public String addSource(String url) {
-        this.sourceStore.add(url);
+    public String getSource(String id) {
+        return this.sourceStore.toJson(id);
+    }
+
+    @JavascriptInterface
+    public String addUrlSource(String name, String url, String mode) {
+        this.sourceStore.addUrl(name, url, mode);
         return this.sourceStore.toJson();
     }
 
     @JavascriptInterface
-    public String removeSource(String url) {
-        this.domainStore.removeAllFromSource(url);
-        this.sourceStore.remove(url);
+    public void pickFileSource(String mode) {
+        this.activity.runOnUiThread(() -> this.activity.launchFilePicker(mode));
+    }
+
+    @JavascriptInterface
+    public String removeSource(String id) {
+        HostsSourceStore.Source source = this.sourceStore.get(id);
+        if (source != null) {
+            this.domainStore.removeAllFromSource(id, source.isAllow());
+        }
+        this.sourceStore.remove(id);
         return this.sourceStore.toJson();
     }
 
     @JavascriptInterface
-    public String toggleSource(String url) {
-        boolean enabled = this.sourceStore.toggleEnabled(url);
-        this.domainStore.setSourceEnabled(url, enabled);
+    public String toggleSource(String id) {
+        HostsSourceStore.Source source = this.sourceStore.get(id);
+        boolean allowBefore = source != null && source.isAllow();
+        boolean enabled = this.sourceStore.toggleEnabled(id);
+        this.domainStore.setSourceEnabled(id, enabled, allowBefore);
         return this.sourceStore.toJson();
     }
 
     @JavascriptInterface
-    public void updateSource(String url) {
+    public String renameSource(String id, String name) {
+        this.sourceStore.setName(id, name);
+        return this.sourceStore.toJson();
+    }
+
+    @JavascriptInterface
+    public String setSourceMode(String id, String mode) {
+        HostsSourceStore.Source source = this.sourceStore.get(id);
+        if (source != null && !source.mode.equals(mode)) {
+            boolean wasAllow = source.isAllow();
+            this.domainStore.removeAllFromSource(id, wasAllow);
+            this.sourceStore.setMode(id, mode);
+        }
+        return this.sourceStore.toJson();
+    }
+
+    @JavascriptInterface
+    public String getSourceDomains(String id) {
+        HostsSourceStore.Source source = this.sourceStore.get(id);
+        if (source == null) {
+            return "[]";
+        }
+        return this.domainStore.getDomainsForSourceJson(id, source.isAllow());
+    }
+
+    @JavascriptInterface
+    public void updateSource(String id) {
         new Thread(() -> {
+            HostsSourceStore.Source source = this.sourceStore.get(id);
+            if (source == null) {
+                return;
+            }
             int count = -1;
             String error = null;
             try {
-                count = HostsFetcher.fetchAndApply(url, this.domainStore);
-                this.sourceStore.updateCount(url, count);
+                boolean allow = source.isAllow();
+                if (HostsSourceStore.TYPE_FILE.equals(source.type)) {
+                    count = HostsFetcher.fetchFromUri(this.activity, android.net.Uri.parse(source.location), this.domainStore, id, allow);
+                } else {
+                    count = HostsFetcher.fetchFromUrl(source.location, this.domainStore, id, allow);
+                }
+                this.sourceStore.updateCount(id, count, System.currentTimeMillis());
             } catch (Exception e) {
                 error = e.getMessage() == null ? "Lỗi tải nguồn" : e.getMessage();
             }
-            this.activity.pushSourceUpdated(url, count, error);
+            this.activity.pushSourceUpdated(id, count, error);
         }).start();
     }
 }

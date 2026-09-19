@@ -31,6 +31,9 @@ body {
   padding: 24px 16px 60px;
 }
 .wrap { max-width: 460px; margin: 0 auto; }
+.screen { display: none; }
+.screen.active { display: block; }
+
 .brand {
   display: flex;
   align-items: center;
@@ -63,6 +66,28 @@ body {
 }
 .brand-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; }
 .brand-sub { font-size: 12px; color: var(--text-muted); }
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.back-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 16px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.header-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; }
 
 .card {
   background: var(--surface);
@@ -133,9 +158,12 @@ body {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   outline: none;
+  width: 100%;
 }
 .add-input::placeholder { color: var(--text-muted); font-family: 'Inter', sans-serif; }
 .add-input:focus { border-color: var(--indigo); }
+.field-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; margin-top: 12px; }
+.field-label:first-child { margin-top: 0; }
 .add-btn {
   background: linear-gradient(135deg, var(--indigo), var(--indigo-dim));
   border: none;
@@ -149,6 +177,43 @@ body {
   box-shadow: 0 4px 14px rgba(239,68,68,0.3);
 }
 .add-btn:active { transform: scale(.97); }
+.full-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--indigo), var(--indigo-dim));
+  border: none;
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 12px 0;
+  cursor: pointer;
+  margin-top: 14px;
+}
+.outline-btn {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 12px 0;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.danger-btn {
+  width: 100%;
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.35);
+  border-radius: 10px;
+  color: var(--red);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 12px 0;
+  cursor: pointer;
+  margin-top: 10px;
+}
 
 .filter-row { display: flex; gap: 6px; margin-bottom: 14px; }
 .filter-btn {
@@ -229,11 +294,20 @@ body {
 }
 .mini-switch.active .mini-switch-knob { transform: translateX(14px); }
 
-.log-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.log-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
-.log-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.log-count { font-size: 12px; color: var(--text-muted); }
-.log-list { display: flex; flex-direction: column; gap: 6px; max-height: 340px; overflow-y: auto; }
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+.summary-top { display: flex; align-items: center; justify-content: space-between; }
+.summary-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; }
+.summary-desc { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+.summary-meta { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+.log-list { display: flex; flex-direction: column; gap: 6px; }
 .log-row {
   display: flex;
   align-items: center;
@@ -241,7 +315,7 @@ body {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   cursor: pointer;
 }
 .log-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
@@ -257,6 +331,8 @@ body {
 }
 .log-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 .log-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+.log-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.log-count { font-size: 12px; color: var(--text-muted); }
 
 .modal-overlay {
   display: none;
@@ -289,127 +365,282 @@ body {
 .modal-label { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
 .modal-value { font-size: 13px; color: var(--text); text-align: right; overflow-wrap: anywhere; }
 .modal-value.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-.secondary-close-btn {
-  width: 100%;
-  margin-top: 16px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  padding: 12px 0;
-  cursor: pointer;
-}
 
-.source-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.source-list { display: flex; flex-direction: column; gap: 8px; }
 .source-row {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 12px;
 }
-.source-top { display: flex; align-items: center; gap: 10px; }
-.source-url {
-  flex: 1;
-  min-width: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+.source-top { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.source-name-wrap { flex: 1; min-width: 0; }
+.source-name {
+  font-size: 13px;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.source-meta { font-size: 11px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; justify-content: space-between; }
-.source-count { font-family: 'JetBrains Mono', monospace; }
-.source-actions { display: flex; gap: 4px; }
-.source-update-btn {
+.source-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+.source-badge.block { background: rgba(248,113,113,0.12); color: var(--red); }
+.source-badge.allow { background: rgba(52,211,153,0.12); color: var(--green); }
+.source-meta { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+.source-actions { display: flex; gap: 8px; margin-top: 10px; }
+.source-action-btn {
+  flex: 1;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
-  font-size: 11px;
-  padding: 5px 10px;
+  font-size: 11.5px;
+  padding: 8px 0;
   cursor: pointer;
 }
-.source-update-btn:disabled { opacity: .5; }
-.source-error { color: var(--red); font-size: 11px; margin-top: 4px; }
+.source-action-btn:disabled { opacity: .5; }
+.source-error { color: var(--red); font-size: 11px; margin-top: 6px; }
+
+.add-sheet { margin-bottom: 16px; }
+.tab-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab-btn {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+.tab-btn.active { border-color: var(--indigo); color: var(--text); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.segmented { display: flex; gap: 6px; }
+.segmented-btn {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 9px 0;
+  cursor: pointer;
+}
+.segmented-btn.active.block { border-color: var(--red); color: var(--red); }
+.segmented-btn.active.allow { border-color: var(--green); color: var(--green); }
+
+.plain-input {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+}
+.plain-input:focus { border-color: var(--indigo); }
+.readonly-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.toggle-row-label { font-size: 13px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">
-    <div class="brand-mark">A</div>
-    <div>
-      <div class="brand-name">AdAway</div>
-      <div class="brand-sub">Chặn quảng cáo qua DNS</div>
-    </div>
-  </div>
 
-  <div class="card vpn-card">
-    <div class="vpn-top">
+  <!-- ===== MAIN SCREEN ===== -->
+  <div class="screen active" id="screen-main">
+    <div class="brand">
+      <div class="brand-mark">A</div>
       <div>
-        <div class="vpn-status-label">Trạng thái VPN</div>
-        <div class="vpn-status-text off" id="vpnStatusText">Đang tắt</div>
-      </div>
-      <div class="switch" id="vpnSwitch" onclick="toggleVpn()">
-        <div class="switch-knob"></div>
+        <div class="brand-name">AdAway</div>
+        <div class="brand-sub">Chặn quảng cáo qua DNS</div>
       </div>
     </div>
-    <div class="vpn-stats">
-      <div>
-        <div class="vpn-stat-num" id="blockedCount">0</div>
-        <div class="vpn-stat-label">đã chặn</div>
+
+    <div class="card vpn-card">
+      <div class="vpn-top">
+        <div>
+          <div class="vpn-status-label">Trạng thái VPN</div>
+          <div class="vpn-status-text off" id="vpnStatusText">Đang tắt</div>
+        </div>
+        <div class="switch" id="vpnSwitch" onclick="toggleVpn()">
+          <div class="switch-knob"></div>
+        </div>
       </div>
-      <div>
-        <div class="vpn-stat-num" id="activeDomainCount">0</div>
-        <div class="vpn-stat-label">domain đang bật</div>
+      <div class="vpn-stats">
+        <div>
+          <div class="vpn-stat-num" id="blockedCount">0</div>
+          <div class="vpn-stat-label">đã chặn</div>
+        </div>
+        <div>
+          <div class="vpn-stat-num" id="activeDomainCount">0</div>
+          <div class="vpn-stat-label">domain đang bật</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Quản lý domain</div>
+      <div class="add-row">
+        <input class="add-input" id="addInput" placeholder="vd: ads.example.com" onkeydown="if(event.key==='Enter')addDomain()">
+        <button class="add-btn" onclick="addDomain()">Thêm</button>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Tất cả</button>
+        <button class="filter-btn" data-filter="on" onclick="setFilter('on')">Đang bật</button>
+        <button class="filter-btn" data-filter="off" onclick="setFilter('off')">Đang tắt</button>
+      </div>
+      <div class="domain-list" id="domainList"></div>
+    </div>
+
+    <div class="summary-card" id="logSummaryCard" onclick="openLogScreen()">
+      <div class="summary-top">
+        <div class="summary-title">Nhật ký yêu cầu DNS</div>
+        <div class="switch" id="logSwitchMain" onclick="event.stopPropagation();toggleLog()">
+          <div class="switch-knob"></div>
+        </div>
+      </div>
+      <div class="summary-desc">Ghi lại domain mà app/web trên máy đang truy vấn khi VPN hoạt động.</div>
+      <div class="summary-meta" id="logSummaryMeta">Đang tắt</div>
+    </div>
+
+    <div class="summary-card" id="sourceSummaryCard" onclick="openSourcesScreen()">
+      <div class="summary-top">
+        <div class="summary-title">Nguồn chặn</div>
+        <div class="switch" id="sourceSwitchMain" onclick="event.stopPropagation()">
+          <div class="switch-knob"></div>
+        </div>
+      </div>
+      <div class="summary-desc">Import hàng loạt domain từ URL hosts list hoặc tệp — tự cập nhật mỗi 30 phút.</div>
+      <div class="summary-meta" id="sourceSummaryMeta">0 nguồn</div>
+    </div>
+  </div>
+
+  <!-- ===== LOG SCREEN ===== -->
+  <div class="screen" id="screen-log">
+    <div class="header-bar">
+      <button class="back-btn" onclick="showScreen('screen-main')">‹</button>
+      <div class="header-title">Nhật ký yêu cầu DNS</div>
+    </div>
+    <div class="card">
+      <div class="toggle-row" style="margin-top:0">
+        <div class="toggle-row-label">Bật ghi nhật ký</div>
+        <div class="switch" id="logSwitch" onclick="toggleLog()">
+          <div class="switch-knob"></div>
+        </div>
+      </div>
+      <div class="summary-desc" style="margin-top:8px">Log vẫn giữ nguyên kể cả khi tắt VPN, chỉ mất khi đóng hẳn app.</div>
+    </div>
+    <div class="card">
+      <div id="logDisabledState" class="empty-state">Bật nhật ký để bắt đầu ghi lại yêu cầu DNS</div>
+      <div id="logEnabledBlock" style="display:none">
+        <div class="log-toolbar">
+          <span id="logCount" class="log-count">0 mục</span>
+          <button class="icon-btn" onclick="clearLogs()">Xoá log</button>
+        </div>
+        <div class="log-list" id="logList"></div>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-title">Quản lý domain</div>
-    <div class="add-row">
-      <input class="add-input" id="addInput" placeholder="vd: ads.example.com" onkeydown="if(event.key==='Enter')addDomain()">
-      <button class="add-btn" onclick="addDomain()">Thêm</button>
+  <!-- ===== SOURCES SCREEN ===== -->
+  <div class="screen" id="screen-sources">
+    <div class="header-bar">
+      <button class="back-btn" onclick="showScreen('screen-main')">‹</button>
+      <div class="header-title">Nguồn chặn</div>
     </div>
-    <div class="filter-row">
-      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Tất cả</button>
-      <button class="filter-btn" data-filter="on" onclick="setFilter('on')">Đang bật</button>
-      <button class="filter-btn" data-filter="off" onclick="setFilter('off')">Đang tắt</button>
-    </div>
-    <div class="domain-list" id="domainList"></div>
-  </div>
 
-  <div class="card">
-    <div class="log-top">
-      <div class="section-title" style="margin-bottom:0">Nhật ký yêu cầu DNS</div>
-      <div class="switch" id="logSwitch" onclick="toggleLog()">
-        <div class="switch-knob"></div>
+    <div class="card add-sheet">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="url" onclick="setSourceTab('url')">Từ URL</button>
+        <button class="tab-btn" data-tab="file" onclick="setSourceTab('file')">Từ tệp</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-url">
+        <div class="field-label">Tên nguồn (tuỳ chọn)</div>
+        <input class="plain-input" id="srcName" placeholder="vd: AdAway official">
+        <div class="field-label">URL hosts list</div>
+        <input class="plain-input" id="srcUrl" placeholder="https://adaway.org/hosts.txt">
+        <div class="field-label">Chế độ</div>
+        <div class="segmented">
+          <button class="segmented-btn active block" data-mode="block" onclick="setAddMode('block')">Chặn (Block)</button>
+          <button class="segmented-btn" data-mode="allow" onclick="setAddMode('allow')">Bỏ qua (Allow)</button>
+        </div>
+        <button class="full-btn" onclick="addUrlSource()">Thêm nguồn</button>
+      </div>
+
+      <div class="tab-panel" id="tab-file">
+        <div class="field-label">Chế độ</div>
+        <div class="segmented">
+          <button class="segmented-btn active block" data-mode="block" onclick="setAddMode('block')">Chặn (Block)</button>
+          <button class="segmented-btn" data-mode="allow" onclick="setAddMode('allow')">Bỏ qua (Allow)</button>
+        </div>
+        <button class="full-btn" onclick="pickFile()">Chọn tệp hosts…</button>
       </div>
     </div>
-    <div class="log-desc">Ghi lại domain mà các app/web trên máy đang truy vấn. Log vẫn giữ nguyên kể cả khi tắt VPN.</div>
 
-    <div id="logDisabledState" class="empty-state">Bật nhật ký để bắt đầu ghi lại yêu cầu DNS</div>
+    <div class="source-list" id="sourceList"></div>
+  </div>
 
-    <div id="logEnabledBlock" style="display:none">
-      <div class="log-toolbar">
-        <span id="logCount" class="log-count">0 mục</span>
-        <button class="icon-btn" onclick="clearLogs()">Xoá log</button>
+  <!-- ===== SOURCE EDIT SCREEN ===== -->
+  <div class="screen" id="screen-source-edit">
+    <div class="header-bar">
+      <button class="back-btn" onclick="showScreen('screen-sources')">‹</button>
+      <div class="header-title">Chỉnh sửa nguồn</div>
+    </div>
+    <div class="card">
+      <div class="field-label">Tên nguồn</div>
+      <input class="plain-input" id="editName" onblur="saveSourceName()">
+      <div class="field-label">Vị trí</div>
+      <div class="readonly-box" id="editLocation"></div>
+      <div class="field-label">Chế độ</div>
+      <div class="segmented">
+        <button class="segmented-btn block" id="editModeBlock" onclick="saveSourceMode('block')">Chặn (Block)</button>
+        <button class="segmented-btn allow" id="editModeAllow" onclick="saveSourceMode('allow')">Bỏ qua (Allow)</button>
       </div>
-      <div class="log-list" id="logList"></div>
+      <div class="toggle-row">
+        <div class="toggle-row-label">Bật nguồn này</div>
+        <div class="switch" id="editEnabledSwitch" onclick="toggleEditSource()">
+          <div class="switch-knob"></div>
+        </div>
+      </div>
+      <div class="summary-meta" id="editMeta" style="margin-top:14px"></div>
+      <button class="outline-btn" id="editUpdateBtn" onclick="updateEditSource()">Cập nhật ngay</button>
+      <button class="outline-btn" onclick="openSourceDomains(currentEditId)">Xem danh sách domain</button>
+      <button class="danger-btn" onclick="deleteEditSource()">Xoá nguồn</button>
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-title">Nguồn chặn</div>
-    <div class="log-desc">Thêm URL danh sách hosts (vd: adaway.org/hosts.txt) để tự động import hàng loạt domain quảng cáo vào danh sách chặn.</div>
-    <div class="add-row">
-      <input class="add-input" id="sourceInput" placeholder="https://adaway.org/hosts.txt" onkeydown="if(event.key==='Enter')addSource()">
-      <button class="add-btn" onclick="addSource()">Thêm</button>
+  <!-- ===== SOURCE DOMAINS SCREEN ===== -->
+  <div class="screen" id="screen-source-domains">
+    <div class="header-bar">
+      <button class="back-btn" onclick="showScreen('screen-source-edit')">‹</button>
+      <div class="header-title" id="domainsHeaderTitle">Danh sách domain</div>
     </div>
-    <div id="sourceList" class="source-list"></div>
+    <div class="card">
+      <div id="sourceDomainsList" class="domain-list"></div>
+    </div>
   </div>
+
 </div>
 
 <div class="modal-overlay" id="logModal" onclick="closeLogDetail(event)">
@@ -419,22 +650,19 @@ body {
     <div class="modal-row"><span class="modal-label">Trạng thái</span><span class="modal-value" id="mStatus"></span></div>
     <div class="modal-row"><span class="modal-label">Ứng dụng</span><span class="modal-value" id="mApp"></span></div>
     <div class="modal-row"><span class="modal-label">Gói</span><span class="modal-value mono" id="mPkg"></span></div>
-    <button class="secondary-close-btn" onclick="closeLogDetail()">Đóng</button>
+    <button class="outline-btn" onclick="closeLogDetail()">Đóng</button>
   </div>
 </div>
 
 <script>
-let filter = 'all';
-let editingName = null;
-let statsTimer = null;
-
-function esc(s) { return s.replace(/'/g, "\\'"); }
-
-function refreshDomains() {
-  const domains = JSON.parse(Android.getDomains());
-  renderDomains(domains);
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
+function esc(s) { return String(s).replace(/'/g, "\\'"); }
+
+/* ---------- VPN ---------- */
 function toggleVpn() {
   const sw = document.getElementById('vpnSwitch');
   if (sw.classList.contains('disabled')) return;
@@ -466,23 +694,17 @@ function onVpnStatus(status, label) {
   }
 }
 
-function startStatsPolling() {
-  updateStats();
-  statsTimer = setInterval(updateStats, 1000);
-}
-function stopStatsPolling() {
-  clearInterval(statsTimer);
-}
-function updateStats() {
-  document.getElementById('blockedCount').textContent = Android.getBlockedCount();
-}
+let statsTimer = null;
+function startStatsPolling() { updateStats(); statsTimer = setInterval(updateStats, 1000); }
+function stopStatsPolling() { clearInterval(statsTimer); }
+function updateStats() { document.getElementById('blockedCount').textContent = Android.getBlockedCount(); }
 
-function setFilter(f) {
-  filter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.filter === f);
-  });
-  refreshDomains();
+/* ---------- Domains ---------- */
+let filter = 'all';
+let editingName = null;
+
+function refreshDomains() {
+  renderDomains(JSON.parse(Android.getDomains()));
 }
 
 function addDomain() {
@@ -494,30 +716,23 @@ function addDomain() {
   renderDomains(domains);
 }
 
-function deleteDomain(name) {
-  const domains = JSON.parse(Android.deleteDomain(name));
-  renderDomains(domains);
-}
-
-function toggleDomain(name) {
-  const domains = JSON.parse(Android.toggleDomain(name));
-  renderDomains(domains);
-}
-
-function startEdit(name) {
-  editingName = name;
-  refreshDomains();
-}
-
+function deleteDomain(name) { renderDomains(JSON.parse(Android.deleteDomain(name))); }
+function toggleDomain(name) { renderDomains(JSON.parse(Android.toggleDomain(name))); }
+function startEdit(name) { editingName = name; refreshDomains(); }
 function saveEdit(oldName, value) {
   const val = value.trim();
   editingName = null;
   if (val && val !== oldName) {
-    const domains = JSON.parse(Android.renameDomain(oldName, val));
-    renderDomains(domains);
+    renderDomains(JSON.parse(Android.renameDomain(oldName, val)));
   } else {
     refreshDomains();
   }
+}
+
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll('#screen-main .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  refreshDomains();
 }
 
 function renderDomains(domains) {
@@ -525,14 +740,12 @@ function renderDomains(domains) {
   let filtered = domains;
   if (filter === 'on') filtered = domains.filter(d => d.enabled);
   if (filter === 'off') filtered = domains.filter(d => !d.enabled);
-
   document.getElementById('activeDomainCount').textContent = domains.filter(d => d.enabled).length;
 
   if (filtered.length === 0) {
     list.innerHTML = '<div class="empty-state">Chưa có domain nào ở mục này</div>';
     return;
   }
-
   list.innerHTML = filtered.map(d => {
     const safe = esc(d.name);
     if (editingName === d.name) {
@@ -553,53 +766,37 @@ function renderDomains(domains) {
   }).join('');
 }
 
-refreshDomains();
-if (Android.isVpnRunning()) {
-  onVpnStatus('RUNNING', 'Đã bật');
-}
-
+/* ---------- Log ---------- */
 let logTimer = null;
 let currentLogs = [];
 
+function openLogScreen() { showScreen('screen-log'); refreshLogs(); }
+
 function initLog() {
   const enabled = Android.isLogEnabled();
-  document.getElementById('logSwitch').classList.toggle('active', enabled);
-  document.getElementById('logDisabledState').style.display = enabled ? 'none' : 'block';
-  document.getElementById('logEnabledBlock').style.display = enabled ? 'block' : 'none';
+  applyLogState(enabled);
   if (enabled) startLogPolling();
 }
 
 function toggleLog() {
-  const sw = document.getElementById('logSwitch');
-  const enabled = !sw.classList.contains('active');
+  const enabled = !document.getElementById('logSwitch').classList.contains('active');
   Android.setLogEnabled(enabled);
-  sw.classList.toggle('active', enabled);
+  applyLogState(enabled);
+  if (enabled) startLogPolling(); else stopLogPolling();
+}
+
+function applyLogState(enabled) {
+  document.getElementById('logSwitch').classList.toggle('active', enabled);
+  document.getElementById('logSwitchMain').classList.toggle('active', enabled);
   document.getElementById('logDisabledState').style.display = enabled ? 'none' : 'block';
   document.getElementById('logEnabledBlock').style.display = enabled ? 'block' : 'none';
-  if (enabled) {
-    startLogPolling();
-  } else {
-    stopLogPolling();
-  }
+  document.getElementById('logSummaryMeta').textContent = enabled ? 'Đang ghi lại' : 'Đang tắt';
 }
 
-function startLogPolling() {
-  refreshLogs();
-  logTimer = setInterval(refreshLogs, 1500);
-}
-function stopLogPolling() {
-  clearInterval(logTimer);
-}
-
-function refreshLogs() {
-  currentLogs = JSON.parse(Android.getLogs());
-  renderLogs();
-}
-
-function clearLogs() {
-  Android.clearLogs();
-  refreshLogs();
-}
+function startLogPolling() { refreshLogs(); logTimer = setInterval(refreshLogs, 1500); }
+function stopLogPolling() { clearInterval(logTimer); }
+function refreshLogs() { currentLogs = JSON.parse(Android.getLogs()); renderLogs(); }
+function clearLogs() { Android.clearLogs(); refreshLogs(); }
 
 function renderLogs() {
   document.getElementById('logCount').textContent = currentLogs.length + ' mục';
@@ -630,88 +827,172 @@ function openLogDetail(index) {
   document.getElementById('mPkg').textContent = l.packageName || '—';
   document.getElementById('logModal').classList.add('open');
 }
-
 function closeLogDetail(event) {
   if (event && event.target.id !== 'logModal') return;
   document.getElementById('logModal').classList.remove('open');
 }
 
+/* ---------- Sources ---------- */
+let currentSources = [];
 let updatingSources = {};
 let sourceErrors = {};
+let addMode = 'block';
+let currentEditId = null;
 
-function initSources() {
-  refreshSources();
-}
+function openSourcesScreen() { showScreen('screen-sources'); refreshSources(); }
+
+function initSources() { refreshSources(); }
 
 function refreshSources() {
-  const sources = JSON.parse(Android.getSources());
-  renderSources(sources);
+  currentSources = JSON.parse(Android.getSources());
+  renderSources();
+  const activeCount = currentSources.filter(s => s.enabled).length;
+  document.getElementById('sourceSummaryMeta').textContent = currentSources.length + ' nguồn · ' + activeCount + ' đang bật';
+  document.getElementById('sourceSwitchMain').classList.toggle('active', activeCount > 0);
 }
 
-function addSource() {
-  const input = document.getElementById('sourceInput');
-  const val = input.value.trim();
-  if (!val) return;
-  const sources = JSON.parse(Android.addSource(val));
-  input.value = '';
-  renderSources(sources);
+function setSourceTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('tab-url').classList.toggle('active', tab === 'url');
+  document.getElementById('tab-file').classList.toggle('active', tab === 'file');
 }
 
-function removeSource(url) {
-  const sources = JSON.parse(Android.removeSource(url));
-  renderSources(sources);
+function setAddMode(mode) {
+  addMode = mode;
+  document.querySelectorAll('.segmented-btn[data-mode]').forEach(b => {
+    if (b.closest('#screen-sources')) b.classList.toggle('active', b.dataset.mode === mode);
+  });
 }
 
-function toggleSource(url) {
-  const sources = JSON.parse(Android.toggleSource(url));
-  renderSources(sources);
+function addUrlSource() {
+  const name = document.getElementById('srcName').value.trim();
+  const url = document.getElementById('srcUrl').value.trim();
+  if (!url) return;
+  currentSources = JSON.parse(Android.addUrlSource(name, url, addMode));
+  document.getElementById('srcName').value = '';
+  document.getElementById('srcUrl').value = '';
+  renderSources();
 }
 
-function updateSource(url) {
-  updatingSources[url] = true;
-  delete sourceErrors[url];
-  refreshSources();
-  Android.updateSource(url);
+function pickFile() { Android.pickFileSource(addMode); }
+
+function toggleSource(id) {
+  currentSources = JSON.parse(Android.toggleSource(id));
+  renderSources();
 }
 
-function onSourceUpdated(url, count, error) {
-  delete updatingSources[url];
-  if (error) {
-    sourceErrors[url] = error;
-  } else {
-    delete sourceErrors[url];
-  }
+function updateSource(id) {
+  updatingSources[id] = true;
+  delete sourceErrors[id];
+  renderSources();
+  Android.updateSource(id);
+}
+
+function onSourceUpdated(id, count, error) {
+  delete updatingSources[id];
+  if (error) sourceErrors[id] = error; else delete sourceErrors[id];
   refreshSources();
   refreshDomains();
+  if (currentEditId === id) openSourceEdit(id);
 }
 
-function renderSources(sources) {
+function fmtTime(ts) {
+  if (!ts) return 'chưa cập nhật';
+  const d = new Date(ts);
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+function renderSources() {
   const list = document.getElementById('sourceList');
-  if (sources.length === 0) {
-    list.innerHTML = '<div class="empty-state">Chưa có nguồn nào</div>';
+  if (currentSources.length === 0) {
+    list.innerHTML = '<div class="empty-state">Chưa có nguồn nào, thêm ở trên</div>';
     return;
   }
-  const esc2 = (s) => s.replace(/'/g, "\\'");
-  list.innerHTML = sources.map(s => {
-    const updating = !!updatingSources[s.url];
-    const err = sourceErrors[s.url];
+  list.innerHTML = currentSources.map(s => {
+    const updating = !!updatingSources[s.id];
+    const err = sourceErrors[s.id];
     return `<div class="source-row">
-      <div class="source-top">
-        <div class="source-url">${s.url}</div>
-        <div class="mini-switch ${s.enabled ? 'active' : ''}" onclick="toggleSource('${esc2(s.url)}')">
-          <div class="mini-switch-knob"></div>
+      <div class="source-top" onclick="toggleSource('${esc(s.id)}')">
+        <div class="source-name-wrap">
+          <div class="source-name">${s.name}</div>
+          <span class="source-badge ${s.mode}">${s.mode === 'allow' ? 'ALLOW' : 'BLOCK'}</span>
         </div>
-        <button class="icon-btn danger" onclick="removeSource('${esc2(s.url)}')">✕</button>
+        <div class="switch ${s.enabled ? 'active' : ''}"><div class="switch-knob"></div></div>
       </div>
-      <div class="source-meta">
-        <span class="source-count">${s.domainCount} domain</span>
-        <button class="source-update-btn" ${updating ? 'disabled' : ''} onclick="updateSource('${esc2(s.url)}')">${updating ? 'Đang tải…' : 'Cập nhật'}</button>
-      </div>
+      <div class="source-meta">${s.domainCount} domain · ${s.type === 'file' ? 'tệp' : 'URL'} · cập nhật ${fmtTime(s.lastUpdated)}</div>
       ${err ? `<div class="source-error">${err}</div>` : ''}
+      <div class="source-actions">
+        <button class="source-action-btn" onclick="event.stopPropagation();openSourceEdit('${esc(s.id)}')">Chỉnh sửa</button>
+        <button class="source-action-btn" onclick="event.stopPropagation();openSourceDomains('${esc(s.id)}')">Xem danh sách</button>
+        <button class="source-action-btn" ${updating ? 'disabled' : ''} onclick="event.stopPropagation();updateSource('${esc(s.id)}')">${updating ? 'Đang tải…' : 'Cập nhật'}</button>
+      </div>
     </div>`;
   }).join('');
 }
 
+function openSourceEdit(id) {
+  currentEditId = id;
+  const s = currentSources.find(x => x.id === id) || JSON.parse(Android.getSource(id));
+  if (!s) return;
+  document.getElementById('editName').value = s.name;
+  document.getElementById('editLocation').textContent = s.location;
+  document.getElementById('editModeBlock').classList.toggle('active', s.mode === 'block');
+  document.getElementById('editModeAllow').classList.toggle('active', s.mode === 'allow');
+  document.getElementById('editEnabledSwitch').classList.toggle('active', s.enabled);
+  document.getElementById('editMeta').textContent = s.domainCount + ' domain · cập nhật lúc ' + fmtTime(s.lastUpdated);
+  showScreen('screen-source-edit');
+}
+
+function saveSourceName() {
+  if (!currentEditId) return;
+  const val = document.getElementById('editName').value.trim();
+  if (!val) return;
+  currentSources = JSON.parse(Android.renameSource(currentEditId, val));
+}
+
+function saveSourceMode(mode) {
+  if (!currentEditId) return;
+  currentSources = JSON.parse(Android.setSourceMode(currentEditId, mode));
+  openSourceEdit(currentEditId);
+}
+
+function toggleEditSource() {
+  if (!currentEditId) return;
+  currentSources = JSON.parse(Android.toggleSource(currentEditId));
+  openSourceEdit(currentEditId);
+}
+
+function updateEditSource() {
+  if (!currentEditId) return;
+  updateSource(currentEditId);
+}
+
+function deleteEditSource() {
+  if (!currentEditId) return;
+  currentSources = JSON.parse(Android.removeSource(currentEditId));
+  currentEditId = null;
+  showScreen('screen-sources');
+  renderSources();
+  refreshDomains();
+}
+
+function openSourceDomains(id) {
+  if (!id) return;
+  const s = currentSources.find(x => x.id === id);
+  document.getElementById('domainsHeaderTitle').textContent = s ? s.name : 'Danh sách domain';
+  const domains = JSON.parse(Android.getSourceDomains(id));
+  const list = document.getElementById('sourceDomainsList');
+  if (domains.length === 0) {
+    list.innerHTML = '<div class="empty-state">Chưa có domain nào — bấm Cập nhật ở màn trước</div>';
+  } else {
+    list.innerHTML = domains.map(d => `<div class="domain-row"><div class="domain-name ${d.enabled ? '' : 'disabled'}">${d.name}</div></div>`).join('');
+  }
+  showScreen('screen-source-domains');
+}
+
+/* ---------- Init ---------- */
+refreshDomains();
+if (Android.isVpnRunning()) onVpnStatus('RUNNING', 'Đã bật');
 initLog();
 initSources();
 </script>

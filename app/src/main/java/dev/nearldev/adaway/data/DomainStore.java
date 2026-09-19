@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DomainStore {
     private static final String PREFS_NAME = "domain_store";
     private static final String KEY_DOMAINS = "domains";
+    private static final String KEY_ALLOW_DOMAINS = "allow_domains";
 
     private static volatile DomainStore instance;
 
@@ -34,6 +35,7 @@ public class DomainStore {
 
     private final SharedPreferences prefs;
     private final Map<String, Domain> domains = new LinkedHashMap<>();
+    private final Map<String, Domain> allowDomains = new LinkedHashMap<>();
     private final AtomicInteger blockedCount = new AtomicInteger(0);
 
     private DomainStore(Context context) {
@@ -109,12 +111,16 @@ public class DomainStore {
         }
     }
 
-    public synchronized boolean addFromSource(String name, String sourceUrl) {
+    public synchronized boolean addFromSource(String name, String sourceId, boolean allowMode) {
         String key = normalize(name);
-        if (key.isEmpty() || this.domains.containsKey(key)) {
+        if (key.isEmpty()) {
             return false;
         }
-        this.domains.put(key, new Domain(key, true, sourceUrl));
+        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
+        if (target.containsKey(key)) {
+            return false;
+        }
+        target.put(key, new Domain(key, true, sourceId));
         return true;
     }
 
@@ -122,18 +128,37 @@ public class DomainStore {
         persist();
     }
 
-    public synchronized void removeAllFromSource(String sourceUrl) {
-        this.domains.values().removeIf(d -> sourceUrl.equals(d.source));
+    public synchronized void removeAllFromSource(String sourceId, boolean allowMode) {
+        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
+        target.values().removeIf(d -> sourceId.equals(d.source));
         persist();
     }
 
-    public synchronized void setSourceEnabled(String sourceUrl, boolean enabled) {
-        for (Domain domain : this.domains.values()) {
-            if (sourceUrl.equals(domain.source)) {
+    public synchronized void setSourceEnabled(String sourceId, boolean enabled, boolean allowMode) {
+        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
+        for (Domain domain : target.values()) {
+            if (sourceId.equals(domain.source)) {
                 domain.enabled = enabled;
             }
         }
         persist();
+    }
+
+    public synchronized String getDomainsForSourceJson(String sourceId, boolean allowMode) {
+        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
+        JSONArray array = new JSONArray();
+        try {
+            for (Domain domain : target.values()) {
+                if (sourceId.equals(domain.source)) {
+                    JSONObject item = new JSONObject();
+                    item.put("name", domain.name);
+                    item.put("enabled", domain.enabled);
+                    array.put(item);
+                }
+            }
+        } catch (JSONException ignored) {
+        }
+        return array.toString();
     }
 
     public synchronized String toJson() {
@@ -152,11 +177,17 @@ public class DomainStore {
     }
 
     public boolean isBlocked(String host) {
-        Domain domain;
+        String key = normalize(host);
+        Domain allowEntry;
+        Domain blockEntry;
         synchronized (this) {
-            domain = this.domains.get(normalize(host));
+            allowEntry = this.allowDomains.get(key);
+            blockEntry = this.domains.get(key);
         }
-        boolean blocked = domain != null && domain.enabled;
+        if (allowEntry != null && allowEntry.enabled) {
+            return false;
+        }
+        boolean blocked = blockEntry != null && blockEntry.enabled;
         if (blocked) {
             this.blockedCount.incrementAndGet();
         }
@@ -186,7 +217,12 @@ public class DomainStore {
     }
 
     private void load() {
-        String json = this.prefs.getString(KEY_DOMAINS, null);
+        loadMap(KEY_DOMAINS, this.domains);
+        loadMap(KEY_ALLOW_DOMAINS, this.allowDomains);
+    }
+
+    private void loadMap(String key, Map<String, Domain> target) {
+        String json = this.prefs.getString(key, null);
         if (json == null) {
             return;
         }
@@ -197,17 +233,22 @@ public class DomainStore {
                 String name = item.getString("name");
                 boolean enabled = item.optBoolean("enabled", true);
                 String source = item.isNull("source") ? null : item.optString("source", null);
-                this.domains.put(name, new Domain(name, enabled, source));
+                target.put(name, new Domain(name, enabled, source));
             }
         } catch (JSONException e) {
-            this.domains.clear();
+            target.clear();
         }
     }
 
     private void persist() {
+        persistMap(KEY_DOMAINS, this.domains);
+        persistMap(KEY_ALLOW_DOMAINS, this.allowDomains);
+    }
+
+    private void persistMap(String key, Map<String, Domain> source) {
         JSONArray array = new JSONArray();
         try {
-            for (Domain domain : this.domains.values()) {
+            for (Domain domain : source.values()) {
                 JSONObject item = new JSONObject();
                 item.put("name", domain.name);
                 item.put("enabled", domain.enabled);
@@ -217,6 +258,6 @@ public class DomainStore {
         } catch (JSONException e) {
             return;
         }
-        this.prefs.edit().putString(KEY_DOMAINS, array.toString()).apply();
+        this.prefs.edit().putString(key, array.toString()).apply();
     }
 }

@@ -4,11 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.OpenableColumns;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -20,12 +23,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import dev.nearldev.adaway.R;
 import dev.nearldev.adaway.data.DomainStore;
+import dev.nearldev.adaway.data.HostsFetcher;
+import dev.nearldev.adaway.data.HostsSourceStore;
+import dev.nearldev.adaway.data.SourceScheduler;
 
 public class MainActivity extends AppCompatActivity {
 
     private DomainStore domainStore;
+    private HostsSourceStore sourceStore;
     private WebView webView;
     private boolean vpnRunning = false;
+    private String pendingFileSourceMode = HostsSourceStore.MODE_BLOCK;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable statsTicker = new Runnable() {
@@ -40,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> vpnConsentLauncher;
     private ActivityResultLauncher<String> notificationPermissionLauncher;
+    private ActivityResultLauncher<String[]> filePickerLauncher;
 
     private final BroadcastReceiver vpnStatusReceiver = new BroadcastReceiver() {
         @Override
@@ -57,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.domainStore = DomainStore.getInstance(this);
+        this.sourceStore = HostsSourceStore.getInstance(this);
+        SourceScheduler.ensureStarted(this);
 
         this.webView = findViewById(R.id.webView);
         this.webView.getSettings().setJavaScriptEnabled(true);
@@ -75,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
         this.notificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 granted -> { }
+        );
+        this.filePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenDocument(),
+                this::onFilePicked
         );
 
         requestNotificationPermission();
@@ -152,9 +167,55 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> this.webView.evaluateJavascript(script, null));
     }
 
-    void pushSourceUpdated(String url, int count, String error) {
+    void pushSourceUpdated(String id, int count, String error) {
         String errorArg = error == null ? "null" : "'" + escapeJs(error) + "'";
-        runJs("onSourceUpdated('" + escapeJs(url) + "', " + count + ", " + errorArg + ");");
+        runJs("onSourceUpdated('" + escapeJs(id) + "', " + count + ", " + errorArg + ");");
+    }
+
+    void launchFilePicker(String mode) {
+        this.pendingFileSourceMode = mode;
+        this.filePickerLauncher.launch(new String[]{"*/*"});
+    }
+
+    private void onFilePicked(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        try {
+            getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } catch (SecurityException ignored) {
+        }
+        String name = queryFileName(uri);
+        String id = this.sourceStore.addFile(name, uri.toString(), this.pendingFileSourceMode);
+        runJs("refreshSources();");
+        if (id == null) {
+            return;
+        }
+        boolean allow = HostsSourceStore.MODE_ALLOW.equals(this.pendingFileSourceMode);
+        new Thread(() -> {
+            int count = -1;
+            String error = null;
+            try {
+                count = HostsFetcher.fetchFromUri(this, uri, this.domainStore, id, allow);
+                this.sourceStore.updateCount(id, count, System.currentTimeMillis());
+            } catch (Exception e) {
+                error = e.getMessage() == null ? "Lỗi đọc tệp" : e.getMessage();
+            }
+            pushSourceUpdated(id, count, error);
+        }).start();
+    }
+
+    private String queryFileName(Uri uri) {
+        try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (index >= 0) {
+                    return cursor.getString(index);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return "Tệp hosts";
     }
 
     private String escapeJs(String value) {
