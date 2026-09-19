@@ -162,9 +162,20 @@ public class DomainStore {
     }
 
     public synchronized String toJson() {
+        return domainsToJson(this.domains, false);
+    }
+
+    public synchronized String toJsonManual() {
+        return domainsToJson(this.domains, true);
+    }
+
+    private String domainsToJson(Map<String, Domain> map, boolean manualOnly) {
         JSONArray array = new JSONArray();
         try {
-            for (Domain domain : this.domains.values()) {
+            for (Domain domain : map.values()) {
+                if (manualOnly && domain.source != null) {
+                    continue;
+                }
                 JSONObject item = new JSONObject();
                 item.put("name", domain.name);
                 item.put("enabled", domain.enabled);

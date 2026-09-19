@@ -526,7 +526,7 @@ body {
     <div class="summary-card" id="sourceSummaryCard" onclick="openSourcesScreen()">
       <div class="summary-top">
         <div class="summary-title">Nguồn chặn</div>
-        <div class="switch" id="sourceSwitchMain" onclick="event.stopPropagation()">
+        <div class="switch" id="sourceSwitchMain" onclick="event.stopPropagation();toggleAllSources()">
           <div class="switch-knob"></div>
         </div>
       </div>
@@ -583,7 +583,7 @@ body {
         <div class="field-label">Chế độ</div>
         <div class="segmented">
           <button class="segmented-btn active block" data-mode="block" onclick="setAddMode('block')">Chặn (Block)</button>
-          <button class="segmented-btn" data-mode="allow" onclick="setAddMode('allow')">Bỏ qua (Allow)</button>
+          <button class="segmented-btn allow" data-mode="allow" onclick="setAddMode('allow')">Bỏ qua (Allow)</button>
         </div>
         <button class="full-btn" onclick="addUrlSource()">Thêm nguồn</button>
       </div>
@@ -592,7 +592,7 @@ body {
         <div class="field-label">Chế độ</div>
         <div class="segmented">
           <button class="segmented-btn active block" data-mode="block" onclick="setAddMode('block')">Chặn (Block)</button>
-          <button class="segmented-btn" data-mode="allow" onclick="setAddMode('allow')">Bỏ qua (Allow)</button>
+          <button class="segmented-btn allow" data-mode="allow" onclick="setAddMode('allow')">Bỏ qua (Allow)</button>
         </div>
         <button class="full-btn" onclick="pickFile()">Chọn tệp hosts…</button>
       </div>
@@ -846,6 +846,10 @@ function initSources() { refreshSources(); }
 function refreshSources() {
   currentSources = JSON.parse(Android.getSources());
   renderSources();
+  refreshSourceSummary();
+}
+
+function refreshSourceSummary() {
   const activeCount = currentSources.filter(s => s.enabled).length;
   document.getElementById('sourceSummaryMeta').textContent = currentSources.length + ' nguồn · ' + activeCount + ' đang bật';
   document.getElementById('sourceSwitchMain').classList.toggle('active', activeCount > 0);
@@ -879,6 +883,13 @@ function pickFile() { Android.pickFileSource(addMode); }
 function toggleSource(id) {
   currentSources = JSON.parse(Android.toggleSource(id));
   renderSources();
+}
+
+function toggleAllSources() {
+  const target = currentSources.filter(s => s.enabled).length === 0;
+  currentSources = JSON.parse(Android.setAllSourcesEnabled(target));
+  renderSources();
+  refreshSourceSummary();
 }
 
 function updateSource(id) {

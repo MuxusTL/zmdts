@@ -23,31 +23,31 @@ public class AndroidBridge {
 
     @JavascriptInterface
     public String getDomains() {
-        return this.domainStore.toJson();
+        return this.domainStore.toJsonManual();
     }
 
     @JavascriptInterface
     public String addDomain(String name) {
         this.domainStore.add(name);
-        return this.domainStore.toJson();
+        return this.domainStore.toJsonManual();
     }
 
     @JavascriptInterface
     public String deleteDomain(String name) {
         this.domainStore.remove(name);
-        return this.domainStore.toJson();
+        return this.domainStore.toJsonManual();
     }
 
     @JavascriptInterface
     public String toggleDomain(String name) {
         this.domainStore.toggleEnabled(name);
-        return this.domainStore.toJson();
+        return this.domainStore.toJsonManual();
     }
 
     @JavascriptInterface
     public String renameDomain(String oldName, String newName) {
         this.domainStore.rename(oldName, newName);
-        return this.domainStore.toJson();
+        return this.domainStore.toJsonManual();
     }
 
     @JavascriptInterface
@@ -122,6 +122,17 @@ public class AndroidBridge {
         boolean allowBefore = source != null && source.isAllow();
         boolean enabled = this.sourceStore.toggleEnabled(id);
         this.domainStore.setSourceEnabled(id, enabled, allowBefore);
+        return this.sourceStore.toJson();
+    }
+
+    @JavascriptInterface
+    public String setAllSourcesEnabled(boolean enabled) {
+        for (HostsSourceStore.Source source : this.sourceStore.getAll()) {
+            if (source.enabled != enabled) {
+                this.sourceStore.toggleEnabled(source.id);
+                this.domainStore.setSourceEnabled(source.id, enabled, source.isAllow());
+            }
+        }
         return this.sourceStore.toJson();
     }
 
