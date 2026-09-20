@@ -50,6 +50,7 @@ import timber.log.Timber;
 
 public class VpnService extends android.net.VpnService implements Handler.Callback {
     public static final String ACTION_START = "dev.nearldev.adaway.vpn.START";
+    public static volatile boolean isRunning = false;
     public static final String ACTION_STOP = "dev.nearldev.adaway.vpn.STOP";
     public static final String VPN_UPDATE_STATUS_INTENT = "dev.nearldev.adaway.VPN_UPDATE_STATUS";
     public static final String VPN_UPDATE_STATUS_EXTRA = "VPN_STATUS";
@@ -85,18 +86,22 @@ public class VpnService extends android.net.VpnService implements Handler.Callba
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         Timber.d("onStartCommand %s", intent == null ? "null intent" : intent);
-        String action = intent == null ? ACTION_START : intent.getAction();
+        if (intent == null) {
+            return START_NOT_STICKY;
+        }
+        String action = intent.getAction();
         if (ACTION_STOP.equals(action)) {
             stopVpn();
             return START_NOT_STICKY;
         }
         startVpn();
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
         Timber.d("Destroying VPN service…");
+        isRunning = false;
         unregisterNetworkCallback();
         Timber.d("Destroyed VPN service.");
     }
@@ -154,6 +159,7 @@ public class VpnService extends android.net.VpnService implements Handler.Callba
     }
 
     private void updateVpnStatus(VpnStatus status) {
+        isRunning = status == VpnStatus.RUNNING;
         Notification notification = getNotification(status);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         switch (status) {

@@ -134,7 +134,7 @@ body {
   transition: transform .25s;
 }
 .switch.active .switch-knob { transform: translateX(20px); }
-.switch.disabled { opacity: .5; cursor: default; }
+.switch.disabled { opacity: .4; cursor: default; pointer-events: none; }
 
 .vpn-stats { display: flex; gap: 20px; margin-top: 18px; }
 .vpn-stat-num { font-family: 'JetBrains Mono', monospace; font-size: 19px; font-weight: 500; }
@@ -928,7 +928,7 @@ function renderSources() {
           <div class="source-name">${s.name}</div>
           <span class="source-badge ${s.mode}">${s.mode === 'allow' ? 'ALLOW' : 'BLOCK'}</span>
         </div>
-        <div class="switch ${s.enabled ? 'active' : ''}"><div class="switch-knob"></div></div>
+        <div class="switch ${s.enabled ? 'active' : ''}" onclick="event.stopPropagation();toggleSource('${esc(s.id)}')"><div class="switch-knob"></div></div>
       </div>
       <div class="source-meta">${s.domainCount} domain · ${s.type === 'file' ? 'tệp' : 'URL'} · cập nhật ${fmtTime(s.lastUpdated)}</div>
       ${err ? `<div class="source-error">${err}</div>` : ''}

@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.domainStore = DomainStore.getInstance(this);
+        this.vpnRunning = dev.nearldev.adaway.vpn.VpnService.isRunning;
         this.sourceStore = HostsSourceStore.getInstance(this);
         SourceScheduler.ensureStarted(this);
 
