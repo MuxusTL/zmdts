@@ -12,28 +12,28 @@
  * Contributions shall also be provided under any later versions of the
  * GPL.
  */
-package dev.nearldev.adaway.vpn.worker;
+package dev.nitroplus.vpn.worker;
 
 import static android.system.OsConstants.ENETUNREACH;
 import static android.system.OsConstants.EPERM;
 import static android.system.OsConstants.POLLIN;
 import static android.system.OsConstants.POLLOUT;
-import static dev.nearldev.adaway.vpn.VpnStatus.RECONNECTING_NETWORK_ERROR;
-import static dev.nearldev.adaway.vpn.VpnStatus.RUNNING;
-import static dev.nearldev.adaway.vpn.VpnStatus.STARTING;
-import static dev.nearldev.adaway.vpn.VpnStatus.STOPPED;
-import static dev.nearldev.adaway.vpn.VpnStatus.STOPPING;
-import static dev.nearldev.adaway.vpn.worker.VpnBuilder.establish;
+import static dev.nitroplus.vpn.VpnStatus.RECONNECTING_NETWORK_ERROR;
+import static dev.nitroplus.vpn.VpnStatus.RUNNING;
+import static dev.nitroplus.vpn.VpnStatus.STARTING;
+import static dev.nitroplus.vpn.VpnStatus.STOPPED;
+import static dev.nitroplus.vpn.VpnStatus.STOPPING;
+import static dev.nitroplus.vpn.worker.VpnBuilder.establish;
 
 import android.os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.StructPollfd;
 
-import dev.nearldev.adaway.vpn.VpnService;
-import dev.nearldev.adaway.vpn.dns.DnsPacketProxy;
-import dev.nearldev.adaway.vpn.dns.DnsQueryQueue;
-import dev.nearldev.adaway.vpn.dns.DnsServerMapper;
+import dev.nitroplus.vpn.VpnService;
+import dev.nitroplus.vpn.dns.DnsPacketProxy;
+import dev.nitroplus.vpn.dns.DnsQueryQueue;
+import dev.nitroplus.vpn.dns.DnsServerMapper;
 import org.pcap4j.packet.IpPacket;
 
 import java.io.FileInputStream;

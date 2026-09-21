@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.vpn.worker;
+package dev.nitroplus.vpn.worker;
 
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
@@ -19,8 +19,8 @@ import android.net.Uri;
 import android.net.VpnService;
 import android.os.ParcelFileDescriptor;
 
-import dev.nearldev.adaway.ui.MainActivity;
-import dev.nearldev.adaway.vpn.dns.DnsServerMapper;
+import dev.nitroplus.ui.MainActivity;
+import dev.nitroplus.vpn.dns.DnsServerMapper;
 
 import java.util.HashSet;
 import java.util.List;

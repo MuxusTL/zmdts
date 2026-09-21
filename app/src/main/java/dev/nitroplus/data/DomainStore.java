@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.data;
+package dev.nitroplus.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -55,9 +55,17 @@ public class DomainStore {
     }
 
     private void seedDefaults() {
-        this.domains.put("ads.doubleclick.net", new Domain("ads.doubleclick.net", true, null));
-        this.domains.put("graph.facebook.com", new Domain("graph.facebook.com", true, null));
-        this.domains.put("track.adjust.com", new Domain("track.adjust.com", true, null));
+        this.domains.put("garena.com", new Domain("garena.com", true, null));
+        this.domains.put("garena.vn", new Domain("garena.vn", true, null));
+        this.domains.put("garena.co.id", new Domain("garena.co.id", true, null));
+        this.domains.put("ff.garena.com", new Domain("ff.garena.com", true, null));
+        this.domains.put("freefiremobile.com", new Domain("freefiremobile.com", true, null));
+        this.domains.put("ggblueshark.com", new Domain("ggblueshark.com", true, null));
+        this.domains.put("vnevent.ggblueshark.com", new Domain("vnevent.ggblueshark.com", true, null));
+        this.domains.put("ginfreefireind.in", new Domain("ginfreefireind.in", true, null));
+        this.domains.put("gin.freefiremobile.com", new Domain("gin.freefiremobile.com", true, null));
+        this.domains.put("na-gin.freefiremobile.com", new Domain("na-gin.freefiremobile.com", true, null));
+        this.domains.put("gamesecurity.us.freefiremobile.com", new Domain("gamesecurity.us.freefiremobile.com", true, null));
     }
 
     public synchronized List<Domain> getAll() {

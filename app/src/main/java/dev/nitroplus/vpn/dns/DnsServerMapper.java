@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.vpn.dns;
+package dev.nitroplus.vpn.dns;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;

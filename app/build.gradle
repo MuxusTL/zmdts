@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace 'dev.nearldev.adaway'
+    namespace 'dev.nitroplus'
     compileSdk 34
 
     defaultConfig {
-        applicationId 'dev.nearldev.adaway'
+        applicationId 'dev.nitroplus'
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName '1.0'
+        versionName '2.0'
     }
 
     buildTypes {

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AdAway</string>
+    <string name="app_name">Nitro VPN</string>
 
     <string name="vpn_notification_channel">Trạng thái VPN</string>
-    <string name="vpn_notification_title">AdAway: %s</string>
+    <string name="vpn_notification_title">Nitro VPN: %s</string>
     <string name="vpn_notification_action_pause">Tắt</string>
     <string name="vpn_notification_action_resume">Bật lại</string>
 
     <string name="vpn_notification_starting">Đang kết nối…</string>
-    <string name="vpn_notification_running">Đã bật</string>
+    <string name="vpn_notification_running">Đã kích hoạt</string>
     <string name="vpn_notification_stopping">Đang tắt…</string>
     <string name="vpn_notification_waiting_for_net">Đang chờ mạng…</string>
     <string name="vpn_notification_reconnecting">Đang kết nối lại…</string>
@@ -16,13 +16,13 @@
     <string name="vpn_notification_stopped">Đang tắt</string>
 
     <string name="brand_name">AdAway</string>
-    <string name="brand_sub">Chặn quảng cáo qua DNS</string>
+    <string name="brand_sub">Chặn kết nối máy chủ qua DNS</string>
     <string name="vpn_status_label">Trạng thái VPN</string>
     <string name="stat_blocked">đã chặn</string>
     <string name="stat_active">domain đang bật</string>
 
     <string name="section_domains">Quản lý domain</string>
-    <string name="add_placeholder">vd: ads.example.com</string>
+    <string name="add_placeholder">example.com</string>
     <string name="add_btn">Thêm</string>
     <string name="filter_all">Tất cả</string>
     <string name="filter_on">Đang bật</string>

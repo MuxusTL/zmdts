@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.vpn.worker;
+package dev.nitroplus.vpn.worker;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Objects.requireNonNull;
@@ -6,7 +6,7 @@ import static java.util.Objects.requireNonNull;
 import android.content.Context;
 import android.content.Intent;
 
-import dev.nearldev.adaway.vpn.VpnService;
+import dev.nitroplus.vpn.VpnService;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;

@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.ui;
+package dev.nitroplus.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,11 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import dev.nearldev.adaway.R;
-import dev.nearldev.adaway.data.DomainStore;
-import dev.nearldev.adaway.data.HostsFetcher;
-import dev.nearldev.adaway.data.HostsSourceStore;
-import dev.nearldev.adaway.data.SourceScheduler;
+import dev.nitroplus.R;
+import dev.nitroplus.data.DomainStore;
+import dev.nitroplus.data.HostsFetcher;
+import dev.nitroplus.data.HostsSourceStore;
+import dev.nitroplus.data.SourceScheduler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver vpnStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Object status = intent.getSerializableExtra(dev.nearldev.adaway.vpn.VpnService.VPN_UPDATE_STATUS_EXTRA);
-            if (status instanceof dev.nearldev.adaway.vpn.VpnStatus) {
-                onVpnStatusChanged((dev.nearldev.adaway.vpn.VpnStatus) status);
+            Object status = intent.getSerializableExtra(dev.nitroplus.vpn.VpnService.VPN_UPDATE_STATUS_EXTRA);
+            if (status instanceof dev.nitroplus.vpn.VpnStatus) {
+                onVpnStatusChanged((dev.nitroplus.vpn.VpnStatus) status);
             }
         }
     };
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.domainStore = DomainStore.getInstance(this);
-        this.vpnRunning = dev.nearldev.adaway.vpn.VpnService.isRunning;
+        this.vpnRunning = dev.nitroplus.vpn.VpnService.isRunning;
         this.sourceStore = HostsSourceStore.getInstance(this);
         SourceScheduler.ensureStarted(this);
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         this.webView.getSettings().setJavaScriptEnabled(true);
         this.webView.setWebViewClient(new WebViewClient());
         this.webView.addJavascriptInterface(new AndroidBridge(this, this.domainStore), "Android");
-        this.webView.loadUrl("file:///android_asset/adaway.html");
+        this.webView.loadUrl("file:///android_asset/nitrovpn.html");
 
         this.vpnConsentLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 this.vpnStatusReceiver,
-                new IntentFilter(dev.nearldev.adaway.vpn.VpnService.VPN_UPDATE_STATUS_INTENT)
+                new IntentFilter(dev.nitroplus.vpn.VpnService.VPN_UPDATE_STATUS_INTENT)
         );
     }
 
@@ -140,23 +140,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startVpn() {
-        Intent intent = new Intent(this, dev.nearldev.adaway.vpn.VpnService.class)
-                .setAction(dev.nearldev.adaway.vpn.VpnService.ACTION_START);
+        Intent intent = new Intent(this, dev.nitroplus.vpn.VpnService.class)
+                .setAction(dev.nitroplus.vpn.VpnService.ACTION_START);
         ContextCompat.startForegroundService(this, intent);
     }
 
     private void stopVpn() {
-        Intent intent = new Intent(this, dev.nearldev.adaway.vpn.VpnService.class)
-                .setAction(dev.nearldev.adaway.vpn.VpnService.ACTION_STOP);
+        Intent intent = new Intent(this, dev.nitroplus.vpn.VpnService.class)
+                .setAction(dev.nitroplus.vpn.VpnService.ACTION_STOP);
         startService(intent);
     }
 
-    private void onVpnStatusChanged(dev.nearldev.adaway.vpn.VpnStatus status) {
-        this.vpnRunning = status == dev.nearldev.adaway.vpn.VpnStatus.RUNNING;
-        if (status == dev.nearldev.adaway.vpn.VpnStatus.RUNNING) {
+    private void onVpnStatusChanged(dev.nitroplus.vpn.VpnStatus status) {
+        this.vpnRunning = status == dev.nitroplus.vpn.VpnStatus.RUNNING;
+        if (status == dev.nitroplus.vpn.VpnStatus.RUNNING) {
             this.handler.removeCallbacks(this.statsTicker);
             this.handler.post(this.statsTicker);
-        } else if (status == dev.nearldev.adaway.vpn.VpnStatus.STOPPED) {
+        } else if (status == dev.nitroplus.vpn.VpnStatus.STOPPED) {
             this.handler.removeCallbacks(this.statsTicker);
             this.domainStore.resetBlockedCount();
         }

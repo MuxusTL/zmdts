@@ -1,8 +1,8 @@
-package dev.nearldev.adaway.vpn;
+package dev.nitroplus.vpn;
 
 import androidx.annotation.StringRes;
 
-import dev.nearldev.adaway.R;
+import dev.nitroplus.R;
 
 import java.util.Arrays;
 

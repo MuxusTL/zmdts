@@ -12,13 +12,13 @@
  * Contributions shall also be provided under any later versions of the
  * GPL.
  */
-package dev.nearldev.adaway.vpn.dns;
+package dev.nitroplus.vpn.dns;
 
 import android.content.Context;
 
-import dev.nearldev.adaway.data.DomainStore;
-import dev.nearldev.adaway.data.DnsLogStore;
-import dev.nearldev.adaway.data.AppAttribution;
+import dev.nitroplus.data.DomainStore;
+import dev.nitroplus.data.DnsLogStore;
+import dev.nitroplus.data.AppAttribution;
 import org.pcap4j.packet.IpPacket;
 import org.pcap4j.packet.IpSelector;
 import org.pcap4j.packet.IpV4Packet;

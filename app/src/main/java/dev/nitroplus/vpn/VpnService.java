@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.vpn;
+package dev.nitroplus.vpn;
 
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static android.app.NotificationManager.IMPORTANCE_LOW;
@@ -8,13 +8,13 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-import static dev.nearldev.adaway.vpn.VpnService.NetworkType.CELLULAR;
-import static dev.nearldev.adaway.vpn.VpnService.NetworkType.WIFI;
-import static dev.nearldev.adaway.vpn.VpnStatus.RECONNECTING;
-import static dev.nearldev.adaway.vpn.VpnStatus.RUNNING;
-import static dev.nearldev.adaway.vpn.VpnStatus.STARTING;
-import static dev.nearldev.adaway.vpn.VpnStatus.STOPPED;
-import static dev.nearldev.adaway.vpn.VpnStatus.WAITING_FOR_NETWORK;
+import static dev.nitroplus.vpn.VpnService.NetworkType.CELLULAR;
+import static dev.nitroplus.vpn.VpnService.NetworkType.WIFI;
+import static dev.nitroplus.vpn.VpnStatus.RECONNECTING;
+import static dev.nitroplus.vpn.VpnStatus.RUNNING;
+import static dev.nitroplus.vpn.VpnStatus.STARTING;
+import static dev.nitroplus.vpn.VpnStatus.STOPPED;
+import static dev.nitroplus.vpn.VpnStatus.WAITING_FOR_NETWORK;
 import static java.util.Objects.requireNonNull;
 
 import android.app.Notification;
@@ -38,9 +38,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import dev.nearldev.adaway.R;
-import dev.nearldev.adaway.ui.MainActivity;
-import dev.nearldev.adaway.vpn.worker.VpnWorker;
+import dev.nitroplus.R;
+import dev.nitroplus.ui.MainActivity;
+import dev.nitroplus.vpn.worker.VpnWorker;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
@@ -49,10 +49,10 @@ import java.util.Set;
 import timber.log.Timber;
 
 public class VpnService extends android.net.VpnService implements Handler.Callback {
-    public static final String ACTION_START = "dev.nearldev.adaway.vpn.START";
+    public static final String ACTION_START = "dev.nitroplus.vpn.START";
     public static volatile boolean isRunning = false;
-    public static final String ACTION_STOP = "dev.nearldev.adaway.vpn.STOP";
-    public static final String VPN_UPDATE_STATUS_INTENT = "dev.nearldev.adaway.VPN_UPDATE_STATUS";
+    public static final String ACTION_STOP = "dev.nitroplus.vpn.STOP";
+    public static final String VPN_UPDATE_STATUS_INTENT = "dev.nitroplus.VPN_UPDATE_STATUS";
     public static final String VPN_UPDATE_STATUS_EXTRA = "VPN_STATUS";
 
     private static final String NOTIFICATION_CHANNEL_ID = "vpn_service";

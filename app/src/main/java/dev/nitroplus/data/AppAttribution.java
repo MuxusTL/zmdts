@@ -1,4 +1,4 @@
-package dev.nearldev.adaway.data;
+package dev.nitroplus.data;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

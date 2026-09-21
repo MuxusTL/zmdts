@@ -1,11 +1,11 @@
-package dev.nearldev.adaway.ui;
+package dev.nitroplus.ui;
 
 import android.webkit.JavascriptInterface;
 
-import dev.nearldev.adaway.data.DnsLogStore;
-import dev.nearldev.adaway.data.DomainStore;
-import dev.nearldev.adaway.data.HostsFetcher;
-import dev.nearldev.adaway.data.HostsSourceStore;
+import dev.nitroplus.data.DnsLogStore;
+import dev.nitroplus.data.DomainStore;
+import dev.nitroplus.data.HostsFetcher;
+import dev.nitroplus.data.HostsSourceStore;
 
 public class AndroidBridge {
 
