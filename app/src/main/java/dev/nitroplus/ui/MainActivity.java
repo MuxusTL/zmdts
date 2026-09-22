@@ -219,6 +219,22 @@ public class MainActivity extends AppCompatActivity {
         return "Tệp hosts";
     }
 
+    public boolean openApp(String packageName) {
+        if (packageName == null || packageName.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName.trim());
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(launchIntent);
+                return true;
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
     private String escapeJs(String value) {
         return value.replace("'", "\\'");
     }

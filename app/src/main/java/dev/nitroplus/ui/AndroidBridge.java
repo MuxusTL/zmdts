@@ -185,4 +185,9 @@ public class AndroidBridge {
             this.activity.pushSourceUpdated(id, count, error);
         }).start();
     }
+
+    @JavascriptInterface
+    public boolean openApp(String packageName) {
+        return this.activity.openApp(packageName);
+    }
 }
