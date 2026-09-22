@@ -109,56 +109,6 @@ public class DomainStore {
         }
     }
 
-    public synchronized boolean addFromSource(String name, String sourceId, boolean allowMode) {
-        String key = normalize(name);
-        if (key.isEmpty()) {
-            return false;
-        }
-        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
-        if (target.containsKey(key)) {
-            return false;
-        }
-        target.put(key, new Domain(key, true, sourceId));
-        return true;
-    }
-
-    public synchronized void persistNow() {
-        persist();
-    }
-
-    public synchronized void removeAllFromSource(String sourceId, boolean allowMode) {
-        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
-        target.values().removeIf(d -> sourceId.equals(d.source));
-        persist();
-    }
-
-    public synchronized void setSourceEnabled(String sourceId, boolean enabled, boolean allowMode) {
-        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
-        for (Domain domain : target.values()) {
-            if (sourceId.equals(domain.source)) {
-                domain.enabled = enabled;
-            }
-        }
-        persist();
-    }
-
-    public synchronized String getDomainsForSourceJson(String sourceId, boolean allowMode) {
-        Map<String, Domain> target = allowMode ? this.allowDomains : this.domains;
-        JSONArray array = new JSONArray();
-        try {
-            for (Domain domain : target.values()) {
-                if (sourceId.equals(domain.source)) {
-                    JSONObject item = new JSONObject();
-                    item.put("name", domain.name);
-                    item.put("enabled", domain.enabled);
-                    array.put(item);
-                }
-            }
-        } catch (JSONException ignored) {
-        }
-        return array.toString();
-    }
-
     public synchronized String toJson() {
         return domainsToJson(this.domains, false);
     }

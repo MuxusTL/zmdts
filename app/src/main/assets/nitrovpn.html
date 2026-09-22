@@ -813,12 +813,10 @@ function closeLogDetail(event) {
 /* App Launcher */
 function openTargetApp(packageName) {
   if (window.Android && typeof window.Android.openApp === 'function') {
-    const ok = window.Android.openApp(packageName);
-    if (!ok) {
-      alert("Không thể mở ứng dụng (" + packageName + "). Ứng dụng có thể chưa được cài đặt.");
-    }
+    window.Android.openApp(packageName);
   } else {
-    alert("Mở app: " + packageName);
+    // Chế độ chạy thử trên trình duyệt (Chrome/Samsung Internet...)
+    window.location.href = "intent://#Intent;package=" + packageName + ";action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end";
   }
 }
 
