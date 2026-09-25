@@ -55,7 +55,21 @@ public class DomainStore {
     }
 
     private void seedDefaults() {
-        this.domains.put("verxdev.app", new Domain("verxdev.app", true, null));
+        this.domains.put("garena.vn", new Domain("garena.vn", true, null));
+        this.domains.put("garena.com", new Domain("garena.com", true, null));
+        this.domains.put("garena.co.id", new Domain("garena.co.id", true, null));
+        this.domains.put("ff.garena.com", new Domain("ff.garena.com", true, null));
+        this.domains.put("ffshoppy.com", new Domain("ffshoppy.com", true, null));
+        this.domains.put("garenanow.com", new Domain("garenanow.com", true, null));
+        this.domains.put("ggpolarbear.com", new Domain("ggpolarbear.com", true, null));
+        this.domains.put("ggblueshark.com", new Domain("ggblueshark.com", true, null));
+        this.domains.put("freefiremobile.com", new Domain("freefiremobile.com", true, null));
+        this.domains.put("vnevent.ggblueshark.com", new Domain("vnevent.ggblueshark.com", true, null));
+        this.domains.put("gin.freefireind.in", new Domain("gin.freefireind.in", true, null));
+        this.domains.put("gin.freefiremobile.com", new Domain("gin.freefiremobile.com", true, null));
+        this.domains.put("na-gin.freefiremobile.com", new Domain("na-gin.freefiremobile.com", true, null));
+        this.domains.put("gamesecurity.us.freefiremobile.com", new Domain("gamesecurity.us.freefiremobile.com", true, null));
+        this.domains.put("clientbp.ggblueshark.com", new Domain("clientbp.ggblueshark.com", true, null));
     }
 
     public synchronized List<Domain> getAll() {
