@@ -32,7 +32,7 @@ public class FloatingMenuService extends Service {
     private WindowManager windowManager;
     private View logoView;
     private View menuView;
-    private com.google.android.material.materialswitch.MaterialSwitch vpnSwitch;
+    private androidx.appcompat.widget.SwitchCompat vpnSwitch;
     private TextView tvVpnStatus;
     private boolean isMenuOpen = false;
     private WindowManager.LayoutParams logoParams;
