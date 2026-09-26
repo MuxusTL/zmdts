@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onVpnStatusChanged(dev.nitroplus.vpn.VpnStatus status) {
-        this.vpnRunning = status == dev.nitroplus.vpn.VpnStatus.RUNNING;
+        this.vpnRunning = status.isStarted();
         if (status == dev.nitroplus.vpn.VpnStatus.RUNNING) {
             this.handler.removeCallbacks(this.statsTicker);
             this.handler.post(this.statsTicker);
