@@ -108,7 +108,7 @@ public class VpnConnectionMonitor {
                         stop();
                         Timber.i("VPN network interface %s is down. Starting VPN service…",
                                 this.networkInterface == null ? "unset" : this.networkInterface.getName());
-                        // startVpnService();
+                        startVpnService();
                     }
                 }
                 try {
@@ -123,7 +123,7 @@ public class VpnConnectionMonitor {
             Timber.w(e, "Failed to test VPN network interface. Starting VPN service…");
             reset();
             if (this.running.get()) {
-                // startVpnService();
+                startVpnService();
             }
         }
     }

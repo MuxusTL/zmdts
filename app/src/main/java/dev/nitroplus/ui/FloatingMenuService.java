@@ -244,13 +244,9 @@ public class FloatingMenuService extends Service {
                     case MotionEvent.ACTION_UP:
                         if (!isMoved && isLogo) {
                             isMenuOpen = !isMenuOpen;
-                            try {
-                                if (isMenuOpen) updateStats();
-                                menuView.setVisibility(isMenuOpen ? View.VISIBLE : View.GONE);
-                                windowManager.updateViewLayout(menuView, menuParams);
-                            } catch (Exception e) {
-                                // Prevent UI crashes from killing the VPN process
-                            }
+                            if (isMenuOpen) updateStats();
+                            menuView.setVisibility(isMenuOpen ? View.VISIBLE : View.GONE);
+                            windowManager.updateViewLayout(menuView, menuParams);
                         }
                         return true;
                     case MotionEvent.ACTION_MOVE:
@@ -260,11 +256,7 @@ public class FloatingMenuService extends Service {
                             isMoved = true;
                             params.x = initialX + dx;
                             params.y = initialY + dy;
-                            try {
-                                windowManager.updateViewLayout(view, params);
-                            } catch (Exception e) {
-                                // Ignore layout update crashes during drag
-                            }
+                            windowManager.updateViewLayout(view, params);
                         }
                         return true;
                 }

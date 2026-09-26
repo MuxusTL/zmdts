@@ -159,7 +159,7 @@ public class VpnService extends android.net.VpnService implements Handler.Callba
     }
 
     private void updateVpnStatus(VpnStatus status) {
-        isRunning = status.isStarted();
+        isRunning = status == VpnStatus.RUNNING;
         Notification notification = getNotification(status);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         switch (status) {
