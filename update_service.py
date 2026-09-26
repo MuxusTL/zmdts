@@ -1,4 +1,6 @@
-package dev.nitroplus.ui;
+import re
+
+content = """package dev.nitroplus.ui;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -211,3 +213,7 @@ public class FloatingMenuService extends Service {
         if (menuView != null) windowManager.removeView(menuView);
     }
 }
+"""
+
+with open("app/src/main/java/dev/nitroplus/ui/FloatingMenuService.java", "w") as f:
+    f.write(content)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="320dp"
+    android:layout_width="360dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_floating_menu"
@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="24dp">
         
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:src="@mipmap/ic_launcher"
-            android:layout_marginEnd="12dp" />
+            android:layout_marginEnd="16dp" />
             
         <TextView
             android:layout_width="0dp"
@@ -25,16 +25,15 @@
             android:layout_weight="1"
             android:text="Nitro VPN"
             android:textColor="#fafafa"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
             
         <ImageView
             android:id="@+id/btnClose"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_close_thin"
             android:padding="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"/>
     </LinearLayout>
@@ -44,9 +43,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/bg_card"
-        android:padding="12dp"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
+        android:padding="16dp"
+        android:gravity="center_vertical">
         
         <LinearLayout
             android:layout_width="0dp"
@@ -58,56 +56,24 @@
                 android:layout_height="wrap_content"
                 android:text="Trạng thái VPN"
                 android:textColor="#848386"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/tvVpnStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Đang tắt"
                 android:textColor="#848386"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginTop="2dp" />
+                android:layout_marginTop="4dp" />
         </LinearLayout>
         
         <Switch
             android:id="@+id/switchVpn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:scaleX="1.2"
+            android:scaleY="1.2" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_card"
-        android:padding="12dp"
-        android:gravity="center_vertical">
-        
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nhật ký DNS"
-                android:textColor="#fafafa"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ghi lại các domain"
-                android:textColor="#848386"
-                android:textSize="11sp"
-                android:layout_marginTop="2dp"/>
-        </LinearLayout>
-        
-        <Switch
-            android:id="@+id/switchLog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 </LinearLayout>
