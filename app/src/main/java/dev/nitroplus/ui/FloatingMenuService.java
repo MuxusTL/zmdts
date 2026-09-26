@@ -214,7 +214,7 @@ public class FloatingMenuService extends Service {
         }
         if (tvVpnStatus != null) {
             tvVpnStatus.setText(isRunning ? "Đã kết nối" : "Đang tắt");
-            tvVpnStatus.setTextColor(Color.parseColor(isRunning ? "#4ade80" : "#848386"));
+            tvVpnStatus.setTextColor(Color.parseColor(isRunning ? "#34d399" : "#848386"));
         }
     }
 

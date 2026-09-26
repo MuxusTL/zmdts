@@ -90,7 +90,7 @@
                 android:minHeight="0dp"
                 android:minWidth="0dp"
                 app:thumbTint="#FFFAFAFA"
-                app:trackTint="#FF121116"
+                app:trackTint="@color/switch_track_tint"
                 app:trackDecorationTint="@android:color/transparent" />
         </LinearLayout>
 

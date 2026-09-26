@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 this.vpnStatusReceiver,
                 new IntentFilter(dev.nitroplus.vpn.VpnService.VPN_UPDATE_STATUS_INTENT)
         );
+        onVpnStatusChanged(dev.nitroplus.vpn.VpnService.isRunning ? dev.nitroplus.vpn.VpnStatus.RUNNING : dev.nitroplus.vpn.VpnStatus.STOPPED);
     }
 
     @Override
