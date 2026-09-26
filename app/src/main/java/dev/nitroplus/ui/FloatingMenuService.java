@@ -97,8 +97,9 @@ public class FloatingMenuService extends Service {
         logoParams.x = 0;
         logoParams.y = 200;
 
+        int menuWidth = (int) android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_DIP, 320, getResources().getDisplayMetrics());
         menuParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                menuWidth,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 type,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
