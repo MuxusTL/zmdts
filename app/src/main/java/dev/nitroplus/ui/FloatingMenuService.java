@@ -72,7 +72,8 @@ public class FloatingMenuService extends Service {
         params.x = 0;
         params.y = 200;
 
-        floatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
+        Context ctx = new android.view.ContextThemeWrapper(this, R.style.Theme_NitroVPN);
+        floatingView = LayoutInflater.from(ctx).inflate(R.layout.layout_floating_widget, null);
         menuView = floatingView.findViewById(R.id.menuView);
         logoImage = floatingView.findViewById(R.id.logoImage);
 
@@ -147,12 +148,13 @@ public class FloatingMenuService extends Service {
                         if (!isMoved && v == logoImage) {
                             isMenuOpen = !isMenuOpen;
                             menuView.setVisibility(isMenuOpen ? View.VISIBLE : View.GONE);
+                            windowManager.updateViewLayout(floatingView, params);
                         }
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         int dx = (int) (event.getRawX() - initialTouchX);
                         int dy = (int) (event.getRawY() - initialTouchY);
-                        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                        if (Math.abs(dx) > 25 || Math.abs(dy) > 25) {
                             isMoved = true;
                             params.x = initialX + dx;
                             params.y = initialY + dy;
