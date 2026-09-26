@@ -85,4 +85,9 @@ public class AndroidBridge {
     public boolean openApp(String packageName) {
         return this.activity.openApp(packageName);
     }
+
+    @JavascriptInterface
+    public void requestFloatingMenu() {
+        this.activity.runOnUiThread(this.activity::requestFloatingMenu);
+    }
 }

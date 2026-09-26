@@ -280,12 +280,14 @@ public class VpnService extends android.net.VpnService implements Handler.Callba
 
         @Override
         public void onAvailable(@NonNull Network network) {
+            if (!isRunning) return;
             Timber.d("On available %s", this.monitoredType);
             addNetworkType(this.monitoredType);
         }
 
         @Override
         public void onLost(@NonNull Network network) {
+            if (!isRunning) return;
             Timber.d("On lost %s", this.monitoredType);
             removeNetworkType(this.monitoredType);
         }

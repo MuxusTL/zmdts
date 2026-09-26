@@ -24,13 +24,17 @@ public class DnsLogStore {
     public static class Entry {
         public final long time;
         public final String domain;
+        public final String recordType;
+        public final String dnsServer;
         public final boolean blocked;
         public final String appLabel;
         public final String packageName;
 
-        public Entry(long time, String domain, boolean blocked, String appLabel, String packageName) {
+        public Entry(long time, String domain, String recordType, String dnsServer, boolean blocked, String appLabel, String packageName) {
             this.time = time;
             this.domain = domain;
+            this.recordType = recordType;
+            this.dnsServer = dnsServer;
             this.blocked = blocked;
             this.appLabel = appLabel;
             this.packageName = packageName;
@@ -62,8 +66,8 @@ public class DnsLogStore {
         this.prefs.edit().putBoolean(KEY_ENABLED, enabled).apply();
     }
 
-    public synchronized void add(String domain, boolean blocked, String appLabel, String packageName) {
-        this.entries.addFirst(new Entry(System.currentTimeMillis(), domain, blocked, appLabel, packageName));
+    public synchronized void add(String domain, String recordType, String dnsServer, boolean blocked, String appLabel, String packageName) {
+        this.entries.addFirst(new Entry(System.currentTimeMillis(), domain, recordType, dnsServer, blocked, appLabel, packageName));
         while (this.entries.size() > MAX_ENTRIES) {
             this.entries.removeLast();
         }
@@ -81,6 +85,8 @@ public class DnsLogStore {
                 JSONObject item = new JSONObject();
                 item.put("time", format.format(entry.time));
                 item.put("domain", entry.domain);
+                item.put("recordType", entry.recordType);
+                item.put("dnsServer", entry.dnsServer);
                 item.put("blocked", entry.blocked);
                 item.put("appLabel", entry.appLabel == null ? "Không xác định" : entry.appLabel);
                 item.put("packageName", entry.packageName == null ? "" : entry.packageName);

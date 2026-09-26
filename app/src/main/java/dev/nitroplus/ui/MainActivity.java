@@ -120,6 +120,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void requestFloatingMenu() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !android.provider.Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+            Toast.makeText(this, "Vui lòng cấp quyền Hiển thị trên các ứng dụng khác", Toast.LENGTH_LONG).show();
+        } else {
+            startService(new Intent(this, FloatingMenuService.class));
+            Toast.makeText(this, "Đã bật Menu Nổi", Toast.LENGTH_SHORT).show();
+            // Move app to background
+            moveTaskToBack(true);
+        }
+    }
+
     private void requestVpnPermission() {
         Intent prepareIntent = VpnService.prepare(this);
         if (prepareIntent != null) {

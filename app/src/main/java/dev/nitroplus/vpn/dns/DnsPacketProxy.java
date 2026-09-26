@@ -196,9 +196,11 @@ public class DnsPacketProxy {
         Name name = dnsMsg.getQuestion().getName();
         String dnsQueryName = name.toString(true);
         boolean blocked = isBlocked(dnsQueryName);
+        int queryType = dnsMsg.getQuestion().getType();
+        String recordType = org.xbill.DNS.Type.string(queryType);
 
         if (this.logStore != null && this.logStore.isEnabled()) {
-            logQuery(dnsQueryName, blocked, ipPacket.getHeader().getSrcAddr(), updPacket.getHeader().getSrcPort().valueAsInt(), packetAddress, packetPort);
+            logQuery(dnsQueryName, recordType, dnsAddress.getHostAddress(), blocked, ipPacket.getHeader().getSrcAddr(), updPacket.getHeader().getSrcPort().valueAsInt(), packetAddress, packetPort);
         }
 
         if (blocked) {
@@ -219,13 +221,13 @@ public class DnsPacketProxy {
         return this.domainStore != null && this.domainStore.isBlocked(hostname);
     }
 
-    private void logQuery(String domain, boolean blocked, InetAddress localAddr, int localPort, InetAddress remoteAddr, int remotePort) {
+    private void logQuery(String domain, String recordType, String dnsServer, boolean blocked, InetAddress localAddr, int localPort, InetAddress remoteAddr, int remotePort) {
         if (this.context == null) {
             return;
         }
         new Thread(() -> {
             AppAttribution.Result attribution = AppAttribution.resolve(this.context, localAddr, localPort, remoteAddr, remotePort);
-            this.logStore.add(domain, blocked, attribution.label, attribution.packageName);
+            this.logStore.add(domain, recordType, dnsServer, blocked, attribution.label, attribution.packageName);
         }).start();
     }
 

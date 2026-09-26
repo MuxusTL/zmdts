@@ -49,6 +49,9 @@ public class AppAttribution {
             String packageName = packages[0];
             ApplicationInfo appInfo = pm.getApplicationInfo(packageName, 0);
             String label = pm.getApplicationLabel(appInfo).toString();
+            if (packages.length > 1) {
+                label += " (+ " + (packages.length - 1) + " apps)";
+            }
             return new Result(packageName, label);
         } catch (Exception e) {
             return UNKNOWN;

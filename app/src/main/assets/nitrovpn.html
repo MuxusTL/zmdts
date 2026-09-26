@@ -571,6 +571,13 @@ body {
       </div>
     </div>
 
+    <div class="summary-card" onclick="Android.requestFloatingMenu()">
+      <div class="summary-top">
+        <div class="summary-title">Menu Nổi (Floating VPN)</div>
+      </div>
+      <div class="summary-desc">Bật biểu tượng thu nhỏ trên màn hình, giúp bật tắt VPN và Nhật ký khi đang chơi game.</div>
+    </div>
+
     <!-- NITROVPN THEME - NitroPlus Developers -->
     <div class="summary-card" id="logSummaryCard" onclick="openLogScreen()">
       <div class="summary-top">
@@ -588,7 +595,7 @@ body {
   <!-- log dns -->
   <div class="screen" id="screen-log">
     <div class="header-bar">
-      <button class="back-btn" onclick="showScreen('screen-main')">‹</button>
+      <button class="back-btn" onclick="setTimeout(() => showScreen('screen-main'), 200)">‹</button>
       <div class="header-title">Nhật ký yêu cầu DNS</div>
     </div>
     <div class="card">
@@ -620,6 +627,8 @@ body {
     <div class="modal-row"><span class="modal-label">Domain</span><span class="modal-value mono" id="mDomain"></span></div>
     <div class="modal-row"><span class="modal-label">Thời gian</span><span class="modal-value" id="mTime"></span></div>
     <div class="modal-row"><span class="modal-label">Trạng thái</span><span class="modal-value" id="mStatus"></span></div>
+    <div class="modal-row"><span class="modal-label">Loại bản ghi</span><span class="modal-value" id="mType"></span></div>
+    <div class="modal-row"><span class="modal-label">Máy chủ DNS</span><span class="modal-value mono" id="mServer"></span></div>
     <div class="modal-row"><span class="modal-label">Ứng dụng</span><span class="modal-value" id="mApp"></span></div>
     <div class="modal-row"><span class="modal-label">Gói</span><span class="modal-value mono" id="mPkg"></span></div>
     <button class="outline-btn" onclick="closeLogDetail()">Đóng</button>
@@ -743,7 +752,7 @@ function renderDomains(domains) {
 let logTimer = null;
 let currentLogs = [];
 
-function openLogScreen() { showScreen('screen-log'); refreshLogs(); }
+function openLogScreen() { setTimeout(() => { showScreen('screen-log'); refreshLogs(); }, 200); }
 
 function initLog() {
   const enabled = Android.isLogEnabled();
@@ -796,6 +805,8 @@ function openLogDetail(index) {
   document.getElementById('mDomain').textContent = l.domain;
   document.getElementById('mTime').textContent = l.time;
   document.getElementById('mStatus').textContent = l.blocked ? 'Đã chặn' : 'Cho phép';
+  document.getElementById('mType').textContent = l.recordType || '—';
+  document.getElementById('mServer').textContent = l.dnsServer || '—';
   document.getElementById('mApp').textContent = l.appLabel;
   document.getElementById('mPkg').textContent = l.packageName || '—';
   document.getElementById('logModal').classList.add('open');
@@ -807,11 +818,13 @@ function closeLogDetail(event) {
 
 /* App Launcher */
 function openTargetApp(packageName) {
-  if (window.Android && typeof window.Android.openApp === 'function') {
-    window.Android.openApp(packageName);
-  } else {
-    window.location.href = "intent://#Intent;package=" + packageName + ";action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end";
-  }
+  setTimeout(() => {
+    if (window.Android && typeof window.Android.openApp === 'function') {
+      window.Android.openApp(packageName);
+    } else {
+      window.location.href = "intent://#Intent;package=" + packageName + ";action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end";
+    }
+  }, 200);
 }
   
 function refreshSources() {}
