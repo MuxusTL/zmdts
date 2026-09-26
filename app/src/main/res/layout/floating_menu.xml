@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="260dp"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_floating_menu"
-    android:padding="16dp"
-    android:layout_marginTop="20dp"
-    android:layout_marginStart="60dp">
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="20dp">
         
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:padding="4dp"
-            android:background="@drawable/bg_nitro_logo"
-            android:src="@drawable/ic_nitro_logo"
-            android:layout_marginEnd="8dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginEnd="12dp" />
             
         <TextView
             android:layout_width="0dp"

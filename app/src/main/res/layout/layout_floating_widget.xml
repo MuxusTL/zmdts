@@ -3,16 +3,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/menuView"
-        layout="@layout/floating_menu"
-        android:visibility="gone" />
-
     <ImageView
         android:id="@+id/logoImage"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="6dp"
-        android:background="@drawable/bg_nitro_logo"
-        android:src="@drawable/ic_nitro_logo" />
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@mipmap/ic_launcher" />
 </FrameLayout>
