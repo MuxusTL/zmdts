@@ -25,13 +25,14 @@ import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import dev.nitroplus.R;
+import dev.nitroplus.data.DomainStore;
 
 public class FloatingMenuService extends Service {
 
     private WindowManager windowManager;
     private View logoView;
     private View menuView;
-    private androidx.appcompat.widget.SwitchCompat vpnSwitch;
+    private com.google.android.material.materialswitch.MaterialSwitch vpnSwitch;
     private TextView tvVpnStatus;
     private boolean isMenuOpen = false;
     private WindowManager.LayoutParams logoParams;
@@ -66,6 +67,7 @@ public class FloatingMenuService extends Service {
             Object status = intent.getSerializableExtra(dev.nitroplus.vpn.VpnService.VPN_UPDATE_STATUS_EXTRA);
             if (status instanceof dev.nitroplus.vpn.VpnStatus) {
                 updateVpnUI(dev.nitroplus.vpn.VpnService.isRunning);
+        updateStats();
             }
         }
     };
@@ -145,10 +147,56 @@ public class FloatingMenuService extends Service {
         ImageView btnClose = menuView.findViewById(R.id.btnClose);
         
         updateVpnUI(dev.nitroplus.vpn.VpnService.isRunning);
+        updateStats();
         
         vpnSwitch.setOnCheckedChangeListener(vpnSwitchListener);
 
         btnClose.setOnClickListener(v -> stopSelf());
+        // Setup fonts
+        android.graphics.Typeface spaceGrotesk = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/space_grotesk.ttf");
+        android.graphics.Typeface inter = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/inter.ttf");
+        android.graphics.Typeface jbMono = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/jb_mono.ttf");
+        
+        TextView textview1 = menuView.findViewById(R.id.textview1);
+        if(textview1 != null) textview1.setTypeface(spaceGrotesk, android.graphics.Typeface.BOLD);
+        
+        TextView textview2 = menuView.findViewById(R.id.textview2);
+        if(textview2 != null) textview2.setTypeface(inter, android.graphics.Typeface.NORMAL);
+        
+        TextView textview3 = menuView.findViewById(R.id.textview3);
+        if(textview3 != null) textview3.setTypeface(inter, android.graphics.Typeface.NORMAL);
+        
+        TextView textview4 = menuView.findViewById(R.id.textview4);
+        if(textview4 != null) textview4.setTypeface(inter, android.graphics.Typeface.NORMAL);
+        
+        TextView button1 = menuView.findViewById(R.id.button1);
+        if(button1 != null) button1.setTypeface(inter, android.graphics.Typeface.BOLD);
+        
+        TextView blockedcount = menuView.findViewById(R.id.blockedcount);
+        if(blockedcount != null) blockedcount.setTypeface(jbMono, android.graphics.Typeface.NORMAL);
+        
+        TextView activedomaincount = menuView.findViewById(R.id.activedomaincount);
+        if(activedomaincount != null) activedomaincount.setTypeface(jbMono, android.graphics.Typeface.NORMAL);
+        
+        if(tvVpnStatus != null) tvVpnStatus.setTypeface(spaceGrotesk, android.graphics.Typeface.BOLD);
+
+        TextView btnCloseMenu = menuView.findViewById(R.id.button1);
+        if (btnCloseMenu != null) btnCloseMenu.setOnClickListener(v -> { isMenuOpen = false; menuView.setVisibility(View.GONE); });
+    }
+
+    
+    private void updateStats() {
+        DomainStore domainStore = DomainStore.getInstance(this);
+        if (domainStore != null) {
+            TextView blockedcount = menuView.findViewById(R.id.blockedcount);
+            TextView activedomaincount = menuView.findViewById(R.id.activedomaincount);
+            if (blockedcount != null) {
+                blockedcount.setText(String.valueOf(domainStore.getBlockedCount()));
+            }
+            if (activedomaincount != null) {
+                activedomaincount.setText(String.valueOf(domainStore.getEnabledCount()));
+            }
+        }
     }
 
     private void updateVpnUI(boolean isRunning) {
@@ -189,6 +237,7 @@ public class FloatingMenuService extends Service {
                     case MotionEvent.ACTION_UP:
                         if (!isMoved && isLogo) {
                             isMenuOpen = !isMenuOpen;
+                            if (isMenuOpen) updateStats();
                             menuView.setVisibility(isMenuOpen ? View.VISIBLE : View.GONE);
                             windowManager.updateViewLayout(menuView, menuParams);
                         }
