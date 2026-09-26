@@ -79,7 +79,8 @@ public class FloatingMenuService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        try {
+            windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ?
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : WindowManager.LayoutParams.TYPE_PHONE;
@@ -104,7 +105,7 @@ public class FloatingMenuService extends Service {
         menuParams.x = 100;
         menuParams.y = 200;
 
-        Context ctx = new android.view.ContextThemeWrapper(this, R.style.Theme_NitroVPN);
+        Context ctx = new androidx.appcompat.view.ContextThemeWrapper(this, R.style.Theme_NitroVPN);
         
         logoView = LayoutInflater.from(ctx).inflate(R.layout.layout_floating_widget, null);
         menuView = LayoutInflater.from(ctx).inflate(R.layout.floating_menu, null);
@@ -131,6 +132,11 @@ public class FloatingMenuService extends Service {
         
         windowManager.addView(logoView, logoParams);
         windowManager.addView(menuView, menuParams);
+        } catch (Exception e) {
+            android.util.Log.e("NitroVPN", "Menu Error: " + android.util.Log.getStackTraceString(e));
+            Toast.makeText(this, "Lỗi hiển thị Menu: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            stopSelf();
+        }
     }
 
     private void setupMenu() {
