@@ -117,7 +117,7 @@ public class FloatingMenuService extends Service {
         logoImage.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth() / 2f);
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth() * 0.25f);
             }
         });
         logoImage.setClipToOutline(true);
