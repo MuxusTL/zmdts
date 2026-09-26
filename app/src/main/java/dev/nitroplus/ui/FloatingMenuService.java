@@ -38,7 +38,13 @@ public class FloatingMenuService extends Service {
     private WindowManager.LayoutParams logoParams;
     private WindowManager.LayoutParams menuParams;
 
+    private long lastSwitchTime = 0;
     private final android.widget.CompoundButton.OnCheckedChangeListener vpnSwitchListener = (buttonView, isChecked) -> {
+        if (System.currentTimeMillis() - lastSwitchTime < 500) {
+            updateVpnUI(!isChecked); // revert visually
+            return;
+        }
+        lastSwitchTime = System.currentTimeMillis();
         if (isChecked) {
             Intent prepareIntent = android.net.VpnService.prepare(this);
             if (prepareIntent != null) {

@@ -131,10 +131,10 @@ public class VpnWorker implements DnsPacketProxy.EventLoop {
      */
     public void stop() {
         Timber.d("Stopping VPN thread.");
+        setExecutor(null); // Interrupt first
         this.connectionMonitor.stop();
         this.connectionMonitor.reset();
         forceCloseTunnel();
-        setExecutor(null);
         Timber.i("VPN thread stopped.");
     }
 

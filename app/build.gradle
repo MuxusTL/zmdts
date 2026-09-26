@@ -10,8 +10,8 @@ android {
         applicationId 'dev.nitroplus'
         minSdk 26
         targetSdk 33
-        versionCode 6
-        versionName 'v2.1.1'
+        versionCode 7
+        versionName 'v2.1.2'
     }
 
     buildTypes {
