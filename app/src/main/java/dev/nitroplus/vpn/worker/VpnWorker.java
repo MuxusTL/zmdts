@@ -118,6 +118,7 @@ public class VpnWorker implements DnsPacketProxy.EventLoop {
      */
     public void start() {
         Timber.d("Starting VPN thread…");
+        this.connectionMonitor.start();
         ExecutorService executor = Executors.newFixedThreadPool(2);
         executor.submit(this::work);
         executor.submit(this.connectionMonitor::monitor);
@@ -130,6 +131,7 @@ public class VpnWorker implements DnsPacketProxy.EventLoop {
      */
     public void stop() {
         Timber.d("Stopping VPN thread.");
+        this.connectionMonitor.stop();
         this.connectionMonitor.reset();
         forceCloseTunnel();
         setExecutor(null);
@@ -172,9 +174,10 @@ public class VpnWorker implements DnsPacketProxy.EventLoop {
         // Initialize the watchdog
         this.vpnWatchDog.initialize(true);
         // Try connecting the vpn continuously
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 this.connectionThrottler.throttle();
+                if (Thread.currentThread().isInterrupted()) break;
                 this.vpnService.notifyVpnStatus(STARTING);
                 runVpn();
                 Timber.i("Told to stop");
@@ -185,6 +188,10 @@ public class VpnWorker implements DnsPacketProxy.EventLoop {
                 Thread.currentThread().interrupt();
                 break;
             } catch (VpnNetworkException | IOException e) {
+                if (Thread.currentThread().isInterrupted()) {
+                    Timber.d("Interrupted while handling exception, breaking loop.");
+                    break;
+                }
                 Timber.w(e, "Network exception in vpn thread, reconnecting…");
                 // If an exception was thrown, notify status and try again
                 this.vpnService.notifyVpnStatus(RECONNECTING_NETWORK_ERROR);
