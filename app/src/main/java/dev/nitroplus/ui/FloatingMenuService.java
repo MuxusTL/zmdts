@@ -32,7 +32,7 @@ public class FloatingMenuService extends Service {
     private WindowManager windowManager;
     private View logoView;
     private View menuView;
-    private androidx.appcompat.widget.SwitchCompat vpnSwitch;
+    private com.google.android.material.materialswitch.MaterialSwitch vpnSwitch;
     private TextView tvVpnStatus;
     private boolean isMenuOpen = false;
     private WindowManager.LayoutParams logoParams;
@@ -108,7 +108,7 @@ public class FloatingMenuService extends Service {
         menuParams.x = 100;
         menuParams.y = 200;
 
-        Context ctx = new androidx.appcompat.view.ContextThemeWrapper(this, R.style.Theme_NitroVPN);
+        Context ctx = new androidx.appcompat.view.ContextThemeWrapper(this, R.style.Theme_NitroVPN_FloatingMenu);
         
         logoView = LayoutInflater.from(ctx).inflate(R.layout.layout_floating_widget, null);
         menuView = LayoutInflater.from(ctx).inflate(R.layout.floating_menu, null);
