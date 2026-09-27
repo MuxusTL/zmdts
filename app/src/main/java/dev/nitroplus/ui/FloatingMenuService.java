@@ -162,6 +162,7 @@ public class FloatingMenuService extends Service {
         // Setup fonts
         android.graphics.Typeface spaceGrotesk = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/space_grotesk.ttf");
         android.graphics.Typeface inter = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/inter.ttf");
+        android.graphics.Typeface interBlack = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/inter_black.ttf");
         android.graphics.Typeface jbMono = android.graphics.Typeface.createFromAsset(getAssets(), "fonts/jb_mono.ttf");
         
         TextView textview1 = menuView.findViewById(R.id.textview1);
@@ -177,7 +178,7 @@ public class FloatingMenuService extends Service {
         if(textview4 != null) textview4.setTypeface(inter, android.graphics.Typeface.NORMAL);
         
         TextView button1 = menuView.findViewById(R.id.button1);
-        if(button1 != null) button1.setTypeface(inter, android.graphics.Typeface.BOLD);
+        if(button1 != null) button1.setTypeface(interBlack, android.graphics.Typeface.NORMAL);
         
         TextView blockedcount = menuView.findViewById(R.id.blockedcount);
         if(blockedcount != null) blockedcount.setTypeface(jbMono, android.graphics.Typeface.NORMAL);

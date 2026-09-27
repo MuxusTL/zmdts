@@ -70,6 +70,30 @@ public class DomainStore {
         this.domains.put("na-gin.freefiremobile.com", new Domain("na-gin.freefiremobile.com", true, null));
         this.domains.put("gamesecurity.us.freefiremobile.com", new Domain("gamesecurity.us.freefiremobile.com", true, null));
         this.domains.put("clientbp.ggblueshark.com", new Domain("clientbp.ggblueshark.com", true, null));
+        this.domains.put("dl.bs.freefiremobile.com", new Domain("dl.bs.freefiremobile.com", true, null));
+        this.domains.put("version.ggwhitehawk.com", new Domain("version.ggwhitehawk.com", true, null));
+        this.domains.put("dl.gmc.freefiremobile.com", new Domain("dl.gmc.freefiremobile.com", true, null));
+        this.domains.put("vnnetwork.ggblueshark.com", new Domain("vnnetwork.ggblueshark.com", true, null));
+        this.domains.put("app-measurement.com", new Domain("app-measurement.com", true, null));
+        this.domains.put("dl.dir.freefiremobile.com", new Domain("dl.dir.freefiremobile.com", true, null));
+        this.domains.put("dl-sg-production.freefiremobile.com", new Domain("dl-sg-production.freefiremobile.com", true, null));
+        this.domains.put("idevent.ggblueshark.com", new Domain("idevent.ggblueshark.com", true, null));
+        this.domains.put("rslw0r.launches.appsflyersdk.com", new Domain("rslw0r.launches.appsflyersdk.com", true, null));
+        this.domains.put("ff.sdk.grtc.garenanow.com", new Domain("ff.sdk.grtc.garenanow.com", true, null));
+        this.domains.put("dl.aw.freefiremobile.com", new Domain("dl.aw.freefiremobile.com", true, null));
+        this.domains.put("dl-sg-production.wildflamestudio.com", new Domain("dl-sg-production.wildflamestudio.com", true, null));
+        this.domains.put("clientbp.ppmainecoonghj.com", new Domain("clientbp.ppmainecoonghj.com", true, null));
+        this.domains.put("version.common.redflamenco.com", new Domain("version.common.redflamenco.com", true, null));
+        this.domains.put("loginbp.ppmainecoonghj.com", new Domain("loginbp.ppmainecoonghj.com", true, null));
+        this.domains.put("rslw0r.inapps.appsflyersdk.com", new Domain("rslw0r.inapps.appsflyersdk.com", true, null));
+        this.domains.put("api-sdk.datadome.co", new Domain("api-sdk.datadome.co", true, null));
+        this.domains.put("dl.castle.freefiremobile.com", new Domain("dl.castle.freefiremobile.com", true, null));
+        this.domains.put("dl.listdl.com", new Domain("dl.listdl.com", true, null));
+        this.domains.put("core-gmc.freefiremobile.com", new Domain("core-gmc.freefiremobile.com", true, null));
+        this.domains.put("firebaselogging-pa.googleapis.com", new Domain("firebaselogging-pa.googleapis.com", true, null));
+        this.domains.put("firebaselogging.googleapis.com", new Domain("firebaselogging.googleapis.com", true, null));
+        this.domains.put("graph.facebook.com", new Domain("graph.facebook.com", true, null));
+        this.domains.put("api.vk.ru", new Domain("api.vk.ru", true, null));
     }
 
     public synchronized List<Domain> getAll() {
