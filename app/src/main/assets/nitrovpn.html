@@ -492,6 +492,19 @@ body {
 .app-open-name { font-size: 13.5px; font-weight: 500; color: var(--text); }
 .app-open-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 .app-open-arrow { color: var(--text-muted); font-size: 15px; flex-shrink: 0; }
+
+/* Devtools */
+.dev-screen { display: none; padding: 20px; flex-direction: column; height: 100vh; overflow-y: auto; background: var(--bg-main); }
+.dev-screen.active { display: flex; }
+.dev-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.dev-title { font-size: 20px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--text-main); }
+.dev-btn { background: var(--surface); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-family: 'Inter', sans-serif; cursor: pointer; }
+.dev-section { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+.dev-section-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
+.dev-toggle { display: flex; justify-content: space-between; align-items: center; }
+.dev-toggle-label { font-size: 13px; color: var(--text-muted); }
+.dev-logs { width: 100%; height: 200px; background: #000; color: #0f0; font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 8px; padding: 10px; border: none; overflow-y: auto; resize: none; margin-top: 10px; }
+.dev-info { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: auto; padding-top: 20px; }
 </style>
 </head>
   <!-- NITROVPN THEME - NitroPlus Developers -->
@@ -818,6 +831,61 @@ function closeLogDetail(event) {
   if (event && event.target.id !== 'logModal') return;
   document.getElementById('logModal').classList.remove('open');
 }
+
+
+// Devtools Logic
+let titleClicks = 0;
+let titleClickTimer = null;
+let devModeUnlocked = localStorage.getItem('devModeUnlocked') === 'true';
+
+if (devModeUnlocked) {
+  document.getElementById('btnDevTools').style.display = 'flex';
+}
+
+document.getElementById('appTitle').addEventListener('click', () => {
+  titleClicks++;
+  clearTimeout(titleClickTimer);
+  
+  if (titleClicks >= 10) {
+    if (!devModeUnlocked) {
+      devModeUnlocked = true;
+      localStorage.setItem('devModeUnlocked', 'true');
+      document.getElementById('btnDevTools').style.display = 'flex';
+      alert('Developer Mode Unlocked!');
+    }
+    titleClicks = 0;
+  } else {
+    titleClickTimer = setTimeout(() => {
+      titleClicks = 0;
+    }, 5000);
+  }
+});
+
+function toggleStrictMode(enabled) {
+  if (window.Android) {
+    Android.setDevModeStrictBlocking(enabled);
+  }
+}
+
+function refreshDebugLogs() {
+  if (window.Android) {
+    document.getElementById('devLogs').value = Android.getDebugLogs();
+    document.getElementById('devLogs').scrollTop = document.getElementById('devLogs').scrollHeight;
+  }
+}
+
+// Override showScreen to handle Devtools init
+const originalShowScreen = showScreen;
+showScreen = function(id) {
+  originalShowScreen(id);
+  if (id === 'screen-dev') {
+    if (window.Android) {
+      document.getElementById('devStrictToggle').checked = Android.isDevModeStrictBlocking();
+      document.getElementById('devInfoText').innerHTML = 'NitroVPN ' + Android.getAppVersion() + '<br>' + Android.getDeviceInfo();
+      refreshDebugLogs();
+    }
+  }
+};
 
 /* App Launcher */
 function openTargetApp(packageName) {

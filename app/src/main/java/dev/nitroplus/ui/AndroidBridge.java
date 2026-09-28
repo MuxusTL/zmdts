@@ -90,4 +90,49 @@ public class AndroidBridge {
     public void requestFloatingMenu() {
         this.activity.runOnUiThread(this.activity::requestFloatingMenu);
     }
+
+    @JavascriptInterface
+    public boolean isDevModeStrictBlocking() {
+        return this.domainStore.isDevModeStrictBlocking();
+    }
+
+    @JavascriptInterface
+    public void setDevModeStrictBlocking(boolean strict) {
+        this.domainStore.setDevModeStrictBlocking(strict);
+    }
+
+    @JavascriptInterface
+    public String getAppVersion() {
+        try {
+            android.content.pm.PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+            return pInfo.versionName + " (" + pInfo.versionCode + ")";
+        } catch (Exception e) {
+            return "Unknown";
+        }
+    }
+
+    @JavascriptInterface
+    public String getDeviceInfo() {
+        return android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " (Android " + android.os.Build.VERSION.RELEASE + ", API " + android.os.Build.VERSION.SDK_INT + ")";
+    }
+
+    @JavascriptInterface
+    public String getDebugLogs() {
+        try {
+            java.lang.Process process = Runtime.getRuntime().exec("logcat -d -t 500");
+            java.io.BufferedReader bufferedReader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(process.getInputStream()));
+            StringBuilder log = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("nitroplus") || line.contains("VpnWorker") || line.contains("FloatingMenu")) {
+                    log.append(line).append("\n");
+                }
+            }
+            return log.toString();
+        } catch (Exception e) {
+            return "Failed to get logs: " + e.getMessage();
+        }
+    }
 }
+

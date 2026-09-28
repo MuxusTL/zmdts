@@ -175,20 +175,42 @@ public class DomainStore {
 
     public boolean isBlocked(String host) {
         String key = normalize(host);
-        Domain allowEntry;
-        Domain blockEntry;
+        boolean isStrict = isDevModeStrictBlocking();
+        
+        Domain allowEntry = null;
+        Domain blockEntry = null;
+        
         synchronized (this) {
             allowEntry = this.allowDomains.get(key);
             blockEntry = this.domains.get(key);
+            
+            if (isStrict && blockEntry == null) {
+                for (Domain d : this.domains.values()) {
+                    if (d.enabled && (key.endsWith("." + d.name) || key.equals(d.name))) {
+                        blockEntry = d;
+                        break;
+                    }
+                }
+            }
         }
+        
         if (allowEntry != null && allowEntry.enabled) {
             return false;
         }
+        
         boolean blocked = blockEntry != null && blockEntry.enabled;
         if (blocked) {
             this.blockedCount.incrementAndGet();
         }
         return blocked;
+    }
+
+    public boolean isDevModeStrictBlocking() {
+        return this.prefs.getBoolean("devModeStrictBlocking", false);
+    }
+
+    public void setDevModeStrictBlocking(boolean strict) {
+        this.prefs.edit().putBoolean("devModeStrictBlocking", strict).apply();
     }
 
     public int getBlockedCount() {
