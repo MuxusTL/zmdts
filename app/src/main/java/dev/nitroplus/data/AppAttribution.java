@@ -67,31 +67,26 @@ public class AppAttribution {
                 return new Result("", "UID: " + uid);
             }
             
-            // Try to find the most "meaningful" package if shared UID
-            String targetPackage = packages[0];
-            String label = "";
+            StringBuilder sbLabel = new StringBuilder();
+            StringBuilder sbPkg = new StringBuilder();
             
-            // If multiple packages, check if it's Google Play Services
-            if (packages.length > 1) {
-                for (String pkg : packages) {
-                    if (pkg.contains("android.gms")) {
-                        targetPackage = pkg;
-                        break;
-                    }
+            for (int i = 0; i < packages.length; i++) {
+                String pkg = packages[i];
+                try {
+                    ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
+                    sbLabel.append(pm.getApplicationLabel(appInfo).toString());
+                } catch (Exception ignored) {
+                    sbLabel.append(pkg);
+                }
+                sbPkg.append(pkg);
+                
+                if (i < packages.length - 1) {
+                    sbLabel.append(" & ");
+                    sbPkg.append(" | ");
                 }
             }
 
-            try {
-                ApplicationInfo appInfo = pm.getApplicationInfo(targetPackage, 0);
-                label = pm.getApplicationLabel(appInfo).toString();
-                if (packages.length > 1) {
-                    label += " (+ " + (packages.length - 1) + " app dùng chung)";
-                }
-            } catch (Exception ignored) {
-                label = targetPackage;
-            }
-
-            return new Result(targetPackage, label);
+            return new Result(sbPkg.toString(), sbLabel.toString());
         } catch (Exception e) {
             return new Result("", "Lỗi phân tích: " + e.getMessage());
         }
