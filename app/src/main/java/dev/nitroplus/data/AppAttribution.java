@@ -67,26 +67,60 @@ public class AppAttribution {
                 return new Result("", "UID: " + uid);
             }
             
-            StringBuilder sbLabel = new StringBuilder();
-            StringBuilder sbPkg = new StringBuilder();
-            
-            for (int i = 0; i < packages.length; i++) {
-                String pkg = packages[i];
-                try {
-                    ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
-                    sbLabel.append(pm.getApplicationLabel(appInfo).toString());
-                } catch (Exception ignored) {
-                    sbLabel.append(pkg);
-                }
-                sbPkg.append(pkg);
-                
-                if (i < packages.length - 1) {
-                    sbLabel.append(" & ");
-                    sbPkg.append(" | ");
+            // Determine primary package
+            String primaryPkg = packages[0];
+            int primaryIndex = 0;
+            if (packages.length > 1) {
+                for (int i = 0; i < packages.length; i++) {
+                    if (packages[i].contains("android.gms")) {
+                        primaryPkg = packages[i];
+                        primaryIndex = i;
+                        break;
+                    }
                 }
             }
 
-            return new Result(sbPkg.toString(), sbLabel.toString());
+            // Get primary label
+            String primaryLabel;
+            try {
+                primaryLabel = pm.getApplicationLabel(pm.getApplicationInfo(primaryPkg, 0)).toString();
+            } catch (Exception e) {
+                primaryLabel = primaryPkg;
+            }
+
+            if (packages.length == 1) {
+                return new Result(primaryPkg, primaryLabel);
+            }
+
+            // Get secondary labels/packages
+            StringBuilder sbSecondaryLabel = new StringBuilder();
+            StringBuilder sbSecondaryPkg = new StringBuilder();
+            boolean firstSecondary = true;
+
+            for (int i = 0; i < packages.length; i++) {
+                if (i == primaryIndex) continue;
+
+                String pkg = packages[i];
+                String label;
+                try {
+                    label = pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)).toString();
+                } catch (Exception e) {
+                    label = pkg;
+                }
+
+                if (!firstSecondary) {
+                    sbSecondaryLabel.append(", ");
+                    sbSecondaryPkg.append(", ");
+                }
+                sbSecondaryLabel.append(label);
+                sbSecondaryPkg.append(pkg);
+                firstSecondary = false;
+            }
+
+            String finalLabel = primaryLabel + " (" + sbSecondaryLabel.toString() + ")";
+            String finalPkg = primaryPkg + " (" + sbSecondaryPkg.toString() + ")";
+
+            return new Result(finalPkg, finalLabel);
         } catch (Exception e) {
             return new Result("", "Lỗi phân tích: " + e.getMessage());
         }

@@ -791,8 +791,11 @@ function renderLogs() {
     <div class="log-row" onclick="openLogDetail(${i})">
       <div class="log-dot ${l.blocked ? 'blocked' : 'allowed'}"></div>
       <div class="log-info">
-        <div class="log-domain">${l.domain}</div>
-        <div class="log-meta">${l.appLabel}${l.blocked ? ' · đã chặn' : ''}</div>
+        <div class="log-domain">${l.domain.length > 30 ? '<marquee behavior="alternate" scrollamount="2">' + l.domain + '</marquee>' : l.domain}</div>
+        <div class="log-meta">${(() => {
+          let t = l.appLabel + (l.blocked ? ' · đã chặn' : '');
+          return t.length > 40 ? '<marquee behavior="alternate" scrollamount="2">' + t + '</marquee>' : t;
+        })()}</div>
       </div>
       <div class="log-time">${l.time}</div>
     </div>
