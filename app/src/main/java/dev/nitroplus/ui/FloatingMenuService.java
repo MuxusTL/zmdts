@@ -15,6 +15,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import androidx.core.app.NotificationCompat;
+
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -87,6 +93,22 @@ public class FloatingMenuService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel("NITROVPN_MENU_CHANNEL", "NitroVPN Menu", NotificationManager.IMPORTANCE_MIN);
+                NotificationManager manager = getSystemService(NotificationManager.class);
+                if (manager != null) manager.createNotificationChannel(channel);
+            }
+            Notification notification = new NotificationCompat.Builder(this, "NITROVPN_MENU_CHANNEL")
+                    .setContentTitle("NitroVPN")
+                    .setContentText("Menu đang hiển thị trên màn hình")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setPriority(NotificationCompat.PRIORITY_MIN)
+                    .build();
+            startForeground(2001, notification);
+        } catch (Exception ignored) {}
+
         try {
             windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 

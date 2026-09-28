@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             Toast.makeText(this, "Vui lòng cấp quyền Hiển thị trên các ứng dụng khác", Toast.LENGTH_LONG).show();
         } else {
-            startService(new Intent(this, FloatingMenuService.class));
+            androidx.core.content.ContextCompat.startForegroundService(this, new Intent(this, FloatingMenuService.class));
             Toast.makeText(this, "Đã bật Menu Nổi", Toast.LENGTH_SHORT).show();
             // Move app to background
             moveTaskToBack(true);
