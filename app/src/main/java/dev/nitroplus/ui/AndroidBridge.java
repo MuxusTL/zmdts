@@ -113,7 +113,21 @@ public class AndroidBridge {
 
     @JavascriptInterface
     public String getDeviceInfo() {
-        return android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " (Android " + android.os.Build.VERSION.RELEASE + ", API " + android.os.Build.VERSION.SDK_INT + ")";
+        try {
+            android.app.ActivityManager actManager = (android.app.ActivityManager) activity.getSystemService(android.content.Context.ACTIVITY_SERVICE);
+            android.app.ActivityManager.MemoryInfo memInfo = new android.app.ActivityManager.MemoryInfo();
+            if (actManager != null) {
+                actManager.getMemoryInfo(memInfo);
+            }
+            long totalRAM = memInfo.totalMem / (1024 * 1024);
+            
+            return "Thiết bị: " + android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " (" + android.os.Build.DEVICE + ")\n" +
+                   "OS: Android " + android.os.Build.VERSION.RELEASE + " (API " + android.os.Build.VERSION.SDK_INT + ")\n" +
+                   "Kiến trúc CPU: " + android.os.Build.SUPPORTED_ABIS[0] + "\n" +
+                   "Tổng RAM: " + totalRAM + " MB";
+        } catch(Exception e) {
+            return android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " (Android " + android.os.Build.VERSION.RELEASE + ")";
+        }
     }
 
     @JavascriptInterface
@@ -134,5 +148,13 @@ public class AndroidBridge {
             return "Failed to get logs: " + e.getMessage();
         }
     }
-}
+    @JavascriptInterface
+    public String getCustomSuffixes() {
+        return domainStore.getCustomSuffixes();
+    }
 
+    @JavascriptInterface
+    public void setCustomSuffixes(String suffixes) {
+        domainStore.setCustomSuffixes(suffixes);
+    }
+}

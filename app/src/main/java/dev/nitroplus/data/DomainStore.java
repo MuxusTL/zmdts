@@ -81,6 +81,7 @@ public class DomainStore {
         this.domains.put("rslw0r.launches.appsflyersdk.com", new Domain("rslw0r.launches.appsflyersdk.com", true, null));
         this.domains.put("ff.sdk.grtc.garenanow.com", new Domain("ff.sdk.grtc.garenanow.com", true, null));
         this.domains.put("dl.aw.freefiremobile.com", new Domain("dl.aw.freefiremobile.com", true, null));
+        this.domains.put("dl.cdn.freefiremobile.com", new Domain("dl.cdn.freefiremobile.com", true, null));
         this.domains.put("dl-sg-production.wildflamestudio.com", new Domain("dl-sg-production.wildflamestudio.com", true, null));
         this.domains.put("clientbp.ppmainecoonghj.com", new Domain("clientbp.ppmainecoonghj.com", true, null));
         this.domains.put("version.common.redflamenco.com", new Domain("version.common.redflamenco.com", true, null));
@@ -93,6 +94,8 @@ public class DomainStore {
         this.domains.put("firebaselogging-pa.googleapis.com", new Domain("firebaselogging-pa.googleapis.com", true, null));
         this.domains.put("firebaselogging.googleapis.com", new Domain("firebaselogging.googleapis.com", true, null));
         this.domains.put("graph.facebook.com", new Domain("graph.facebook.com", true, null));
+        this.domains.put("free-fire-8cd39.appspot.com", new Domain("free-fire-8cd39.appspot.com", true, null));
+        this.domains.put("free-fire-8cd39.firebaseio.com", new Domain("free-fire-8cd39.firebaseio.com", true, null));
         this.domains.put("api.vk.ru", new Domain("api.vk.ru", true, null));
     }
 
@@ -186,9 +189,12 @@ public class DomainStore {
             
             if (isStrict && blockEntry == null) {
                 for (Domain d : this.domains.values()) {
-                    if (d.enabled && (key.endsWith("." + d.name) || key.equals(d.name))) {
-                        blockEntry = d;
-                        break;
+                    if (d.enabled) {
+                        String base = extractBaseDomain(d.name);
+                        if (key.endsWith("." + base) || key.equals(base)) {
+                            blockEntry = d;
+                            break;
+                        }
                     }
                 }
             }
@@ -278,5 +284,49 @@ public class DomainStore {
             return;
         }
         this.prefs.edit().putString(key, array.toString()).apply();
+    }
+
+    public String getCustomSuffixes() {
+        return prefs.getString("custom_suffixes", "blogspot.com, wordpress.com, wixsite.com, weebly.com, tumblr.com, pages.dev, github.io, gitlab.io, bitbucket.io, vercel.app, netlify.app, herokuapp.com, firebaseapp.com, web.app, onrender.com, glitch.me, repl.co, fly.dev, pythonanywhere.com, duckdns.org, dyndns.org, no-ip.org, ngrok.io, ngrok-free.app");
+    }
+
+    public void setCustomSuffixes(String suffixes) {
+        prefs.edit().putString("custom_suffixes", suffixes).apply();
+    }
+
+    private String extractBaseDomain(String domain) {
+        if (domain == null || domain.isEmpty()) return domain;
+        if (domain.matches("^[0-9.]+$")) return domain; // IP address
+        
+        String custom = getCustomSuffixes();
+        if (!custom.isEmpty()) {
+            String[] suffixes = custom.split(",");
+            for (String suffix : suffixes) {
+                String s = suffix.trim();
+                if (!s.isEmpty() && domain.endsWith("." + s)) {
+                    String prefix = domain.substring(0, domain.length() - s.length() - 1);
+                    int lastDot = prefix.lastIndexOf('.');
+                    if (lastDot != -1) {
+                        return prefix.substring(lastDot + 1) + "." + s;
+                    }
+                    return domain;
+                }
+            }
+        }
+        
+        String[] parts = domain.split("\\.");
+        if (parts.length <= 2) return domain;
+        
+        String tld = parts[parts.length - 1];
+        String sld = parts[parts.length - 2];
+        
+        boolean isSecondLevel = sld.equals("com") || sld.equals("co") || sld.equals("net") 
+                || sld.equals("org") || sld.equals("gov") || sld.equals("edu") 
+                || (sld.length() <= 3 && tld.length() <= 3);
+                
+        if (isSecondLevel && parts.length >= 3) {
+            return parts[parts.length - 3] + "." + sld + "." + tld;
+        }
+        return sld + "." + tld;
     }
 }
