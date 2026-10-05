@@ -94,9 +94,13 @@ public class DomainStore {
         this.domains.put("firebaselogging-pa.googleapis.com", new Domain("firebaselogging-pa.googleapis.com", true, null));
         this.domains.put("firebaselogging.googleapis.com", new Domain("firebaselogging.googleapis.com", true, null));
         this.domains.put("graph.facebook.com", new Domain("graph.facebook.com", true, null));
+        this.domains.put("ff.dr.grtc.garenanow.com", new Domain("ff.dr.grtc.garenanow.com", true, null));
         this.domains.put("free-fire-8cd39.appspot.com", new Domain("free-fire-8cd39.appspot.com", true, null));
         this.domains.put("free-fire-8cd39.firebaseio.com", new Domain("free-fire-8cd39.firebaseio.com", true, null));
+        this.domains.put("cdn.wildflamestudio.com", new Domain("cdn.wildflamestudio.com", true, null));
+        this.domains.put("dlgarenanow-a.akamaihd.net", new Domain("dlgarenanow-a.akamaihd.net", true, null));
         this.domains.put("api.vk.ru", new Domain("api.vk.ru", true, null));
+        this.domains.put("gopapi.io", new Domain("gopapi.io", true, null));
     }
 
     public synchronized List<Domain> getAll() {
